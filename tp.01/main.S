@@ -47,6 +47,10 @@ i:	.space 	4
 /* Implementation of assembler functions and methods */
 	.text
 main:	nop
+	// print banner...
+	ldr	r0, =banner
+	bl 	printf
+
 	/* start to implement your code here */
 
 
@@ -54,4 +58,16 @@ main:	nop
 	b	1b
 
 	bx	lr
+
+
+// Constant variables declation (rom data)	
+	.section .rodata
+
+// String definition used for message outputs (printf)
+banner:	.ascii "\n"
+	.ascii "HEIA-FR - Embedded Systems 1 Laboratory\n"
+	.ascii "An introduction to the development environment\n"
+	.ascii "--> Simple ARM assembler program to experiment the Embedded System\n"
+	.ascii "    Laboratory development environment under Git and Eclipse.\n"
+	.asciz "\n"
 
