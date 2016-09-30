@@ -25,39 +25,53 @@
  */
 
 /* Export public symbols */
-	.global main, v, i
+	.global main, res, incr, i
 
 
 /* Constants declaration */
-#define CONSTANT 10
+#define LOOPS 8
 
 
 /* Initialized variables declation */
-	.data
-	.align	8
-v:	.short	CONSTANT
+		.data
+		.align	8
+res :	.long	16
+incr :	.short	32
 
 
 /* Uninitialized variables declation */
 	.bss
-	.align	8
-i:	.space 	4
+	.align	8 // oblige l'assembleur à compléter avec des octets (inutilisés) pour retrouver une adresse multiple de 4
+i:	.space 	4 // 4  = long
 
 
 /* Implementation of assembler functions and methods */
-	.text
+		.text
 main:	nop
-	// print banner...
-	ldr	r0, =banner
-	bl 	printf
+		mov		r0, #LOOPS  // copie les données de #LOOPS vers r0
+		ldr		r1, =incr   // stocke l'adresse de la donnée sur le registre
+		ldrh	r1, [r1]	// stocke les 16 premiers bits de la valeur de r1 vers r1
+		ldr		r3, =res	// stocke le long res sur le registre r3
+		ldr		r4, =i		// stocke
+		mov		r5, #0
+		str		r5, [r4]
+next :  ldr		r2, [r3]
+		add		r2, r1 // ajoute r1 à r2
+		str		r2, [r3]
+		ldr		r5, [r4]
+		add		r5, #1
+		str		r5, [r4]
+		cmp		r5, r0
+		bne		next
+		// print banner...
+		// ldr	r0, =banner
+		// bl 	printf
 
 	/* start to implement your code here */
-
-
 1:	nop
 	b	1b
 
-	bx	lr
+	// bx	lr
 
 
 // Constant variables declation (rom data)	
