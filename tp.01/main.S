@@ -43,7 +43,6 @@ incr :	.short	32	/* Crée une variable de taille short (16 bits) avec la valeur 
 	.align	8	/* Aligne la prochaine donnée ou instruction à une adresse multiple de 8 */
 i:	.space 	4	/* Crée un espace de stockage de 4 bytes avec l'étiquette i (initialisé à 0) */
 
-
 // Assembler functions implementation
 		.text 				/* Section pour le code */
 main:	nop					/* Fait rien du tout (No Operation) */
@@ -64,6 +63,33 @@ next :  ldr		r2, [r3]	/* Récupère dans r2 le "word" se trouvant à l'adresse s
 		bne		next		/* Si la comparaison précédente n'est pas égale, aller à l'étiquette next */
 1:		nop					/* Fait rien du tout (No Operation) */
 		b		1b			/* Aller à l'étiquette 1 avant (b pour before) cette instruction */
+
+
+/* Optimized assembler functions implementation */
+/*
+Pour optimiser le code, on peut sortir les instructions ldr et str de la boucle pour éviter d'accéder à la
+mémoire à chaque passage ce qui coûte en temps. On peut également éviter de mettre la valeur zéro dans
+l'espace mémoire i car comme i étant dans la section .bss elle sera de toute manière initialement à zéro.
+
+Voici le code optimisé :
+*/
+//		  .text
+//main:	  nop
+//		  ldr		r1, =incr
+//		  ldrh	r1, [r1]
+//		  ldr		r3, =res
+//		  ldr		r4, =i
+//		  ldr		r2, [r3]
+//		  ldr		r5, [r4]
+//next:   add		r2, r1
+//		  add		r5, #1
+//		  cmp		r5, #LOOPS
+//		  bne		next
+//		  str		r2, [r3]
+//		  str		r5, [r4]
+//1:      nop
+//		  b		    1b
+
 
 /* Code équivalent en JAVA : */
 
