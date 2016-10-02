@@ -20,68 +20,47 @@
  * Purpose:	Simple ARM assembler program to experiment the Embedded System
  *		Laboratory development environment under Git and Eclipse.
  *
- * Author: 	<author(s)>
- * Date: 	<date>
+ * Author: 	Alan Sueur & Jonathan Rial
+ * Date: 	October 2016
  */
 
-/* Export public symbols */
-	.global main, res, incr, i
+// Export public symbols
+	.global main, res, incr, i /* Déclare les symboles globaux */
 
 
-/* Constants declaration */
-#define LOOPS 8
+// Declaration of the constants
+#define LOOPS 8 /* Déclare une constant LOOPS avec la valeur */
 
 
-/* Initialized variables declation */
-		.data
-		.align	8
-res :	.long	16
-incr :	.short	32
+// Initialized variables declation
+		.data		/* Section pour les données initialisées */
+		.align	8	/* Aligne la prochaine donnée ou instruction à une adresse multiple de 8 */
+res :	.long	16	/* Crée une variable de taille long (32 bits) avec la valeur 16 */
+incr :	.short	32	/* Crée une variable de taille short (16 bits) avec la valeur 32 */
+
+// Uninitialized variables declation
+	.bss		/* Section pour les données mises à zéro */
+	.align	8	/* Aligne la prochaine donnée ou instruction à une adresse multiple de 8 */
+i:	.space 	4	/* Crée un espace de stockage de 4 bytes avec l'étiquette i (initialisé à 0) */
 
 
-/* Uninitialized variables declation */
-	.bss
-	.align	8 // oblige l'assembleur à compléter avec des octets (inutilisés) pour retrouver une adresse multiple de 4
-i:	.space 	4 // 4  = long
-
-
-/* Implementation of assembler functions and methods */
-		.text
-main:	nop
-		mov		r0, #LOOPS  // copie les données de #LOOPS vers r0
-		ldr		r1, =incr   // stocke l'adresse de la donnée sur le registre
-		ldrh	r1, [r1]	// stocke les 16 premiers bits de la valeur de r1 vers r1
-		ldr		r3, =res	// stocke le long res sur le registre r3
-		ldr		r4, =i		// stocke
-		mov		r5, #0
-		str		r5, [r4]
-next :  ldr		r2, [r3]
-		add		r2, r1 // ajoute r1 à r2
-		str		r2, [r3]
-		ldr		r5, [r4]
-		add		r5, #1
-		str		r5, [r4]
-		cmp		r5, r0
-		bne		next
-		// print banner...
-		// ldr	r0, =banner
-		// bl 	printf
-
-	/* start to implement your code here */
-1:	nop
-	b	1b
-
-	// bx	lr
-
-
-// Constant variables declation (rom data)	
-	.section .rodata
-
-// String definition used for message outputs (printf)
-banner:	.ascii "\n"
-	.ascii "HEIA-FR - Embedded Systems 1 Laboratory\n"
-	.ascii "An introduction to the development environment\n"
-	.ascii "--> Simple ARM assembler program to experiment the Embedded System\n"
-	.ascii "    Laboratory development environment under Git and Eclipse.\n"
-	.asciz "\n"
-
+// Assembler functions implementation
+		.text 				/* Section pour le code */
+main:	nop					/* Fait rien du tout (No Operation) */
+		mov		r0, #LOOPS  /* Copie la valeur de la constante LOOPS dans r0 */
+		ldr		r1, =incr   /* Récupère dans r1 l'adresse de stockage de la variable incr */
+		ldrh	r1, [r1]	/* Récupère dans r1 le "half word" se trouvant à l'adresse stockée dans r1 */
+		ldr		r3, =res	/* Récupère dans r3 l'adresse de stockage de la variable res */
+		ldr		r4, =i		/* Récupère dans r4 l'adresse de stockage de la variable i */
+		mov		r5, #0		/* Copie la valeur 0 dans r5 */
+		str		r5, [r4]	/* Stocke r5 à l'adresse stockée dans r4 */
+next :  ldr		r2, [r3]	/* Récupère dans r2 le "word" se trouvant à l'adresse stockée dans r3 */
+		add		r2, r1		/* Additonne la valeur stockée dans r1 à la valeur stockée dans r2 */
+		str		r2, [r3]	/* Stocke r2 à l'adresse stockée dans r3 */
+		ldr		r5, [r4]	/* Récupère dans r5 le "word" se trouvant à l'adresse stockée dans r4 */
+		add		r5, #1		/* Additonne 1 à la valeur stockée dans r5 */
+		str		r5, [r4]	/* Stocke r5 à l'adresse stockée dans r4 */
+		cmp		r5, r0		/* Compare la valeur stockée dans r5 à la valeur stcokée dans r0 */
+		bne		next		/* Si la comparaison précédente n'est pas égale, aller à l'étiquette next */
+1:		nop					/* Fait rien du tout (No Operation) */
+		b		1b			/* Aller à l'étiquette 1 avant (b pour before) cette instruction */
