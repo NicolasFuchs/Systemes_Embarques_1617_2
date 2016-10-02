@@ -64,3 +64,22 @@ next :  ldr		r2, [r3]	/* Récupère dans r2 le "word" se trouvant à l'adresse s
 		bne		next		/* Si la comparaison précédente n'est pas égale, aller à l'étiquette next */
 1:		nop					/* Fait rien du tout (No Operation) */
 		b		1b			/* Aller à l'étiquette 1 avant (b pour before) cette instruction */
+
+/* Code équivalent en JAVA : */
+
+/*
+public class Main {
+
+    public static final long LOOPS = 8;
+
+    public static void main(String[] args) {
+        long res = 16;
+        short incr = 32;
+        long i = 0;
+        while(i != LOOPS) {
+            res += incr;
+            i++;
+        }
+    }
+}
+*/
