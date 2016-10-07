@@ -40,6 +40,25 @@ main:	nop
 
 	// start to implement your code here
 
+	ldr r0, #2
+	b l2
+
+l1: add r0, #1
+
+		mul r1, r0, #2
+		b l4
+
+	l3: add r1, r1, r0
+
+
+	l4: cmp r1, MAX
+		blo l3
+
+l2: cmp r0, MAX
+	blo l1
+
+
+
 	ldr	r4, =0
 1:	ldr	r0, =format
 	mov	r1, r4
@@ -51,7 +70,6 @@ main:	nop
 	// return 0
 	ldr	r0, =0
 	bx	lr
-
 
 // Constant variables declation (rom data)
 	.section .rodata
