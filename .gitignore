@@ -1,0 +1,12 @@
+.DS_Store
+.cproject
+.project
+.settings
+*.[oad]
+.obj
+app_*
+*~
+*.xpm
+9?_*
+build
+tp
