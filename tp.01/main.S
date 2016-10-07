@@ -25,17 +25,18 @@
  */
 
 /* Export public symbols */
-	.global main, v, i
+	.global main, res, incr, i
 
 
 /* Constants declaration */
-#define CONSTANT 10
+#define LOOPS 8
 
 
 /* Initialized variables declation */
-	.data
-	.align	8
-v:	.short	CONSTANT
+		.data
+		.align	8
+res : 	.long 16
+incr :	.short	32
 
 
 /* Uninitialized variables declation */
@@ -48,6 +49,22 @@ i:	.space 	4
 	.text
 main:	nop
 	/* start to implement your code here */
+
+		mov		r0, #LOOPS
+		ldr		r1, =incr
+		ldrh	r1, [r1]
+		ldr		r3, =res
+		ldr		r4, =i
+		mov		r5, #0
+		str		r5, [r4]
+next :	ldr		r2, [r3]
+		add		r2, r1
+		str		r2, [r3]
+		ldr		r5, [r4]
+		add		r5, #1
+		str		r5, [r4]
+		cmp		r5, r0
+		bne		next
 
 
 1:	nop
