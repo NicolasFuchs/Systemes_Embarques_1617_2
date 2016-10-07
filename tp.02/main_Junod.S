@@ -42,7 +42,32 @@ main:	nop
 	bl 	printf
 
 //------- start to implement your code here---------
+	//déclaration du tableau v de booléens
+	.bss
+		v: .space MAX
 
+	//initialisation du tableau -> toutes les cases à true
+	ldr r0,true
+	ldr r1,=v
+	ldr r2,MAX-1
+1:	strB r0,[r1,r2]
+	subs r2,1
+	bge 1b
+
+	//rendre tous les multiples non premiers
+	ldr r0,false
+	ldr r1, =v
+	ldr r2,MAX
+1:	ldr r3,[r2]
+2:	add r3,r2
+	strB r0,[r1,r3-1]
+	cmp r2,MAX
+	b//CONDITION 2b
+	sub r2,1
+	bge 1b
+
+
+//---------end of our code--------------------------
 	ldr	r4, =0
 1:	ldr	r0, =format
 	mov	r1, r4
