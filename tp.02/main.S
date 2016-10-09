@@ -67,4 +67,3 @@ banner:	.ascii "\n"
 	.asciz "\n"
 
 format:	.asciz "%d\n"
-
