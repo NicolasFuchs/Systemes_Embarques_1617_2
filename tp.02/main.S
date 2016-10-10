@@ -1,9 +1,4 @@
-/*
- * Main_Junod.S
- *
- *  Created on: Oct 10, 2016
- *      Author: lmi
- */
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
