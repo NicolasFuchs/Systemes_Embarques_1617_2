@@ -35,114 +35,115 @@ LOAD /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a
 LOAD /usr/arm-none-eabi/lib//libm.a
 END GROUP
 
-.text           0x0000000080000000     0x28a0
+.text           0x0000000080000000     0x2888
                 0x0000000080001000                . = (. + 0x1000)
  *fill*         0x0000000080000000     0x1000 
  *(.text_startup)
  .text_startup  0x0000000080001000      0x120 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
                 0x0000000080001000                _start
  *(.text*)
- .text          0x0000000080001120       0x58 .obj/bbb/main.o
+ .text          0x0000000080001120       0x40 .obj/bbb/main.o
                 0x0000000080001120                main
- .text          0x0000000080001178        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
- .text          0x0000000080001178      0x300 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
-                0x000000008000120c                _read
-                0x0000000080001248                _write
-                0x00000000800012b0                _lseek
-                0x00000000800012dc                _isatty
-                0x0000000080001300                _fstat
-                0x0000000080001334                _close
-                0x0000000080001358                _sbrk
-                0x0000000080001400                _exit
-                0x0000000080001414                _init
-                0x000000008000142c                _fini
-                0x0000000080001444                _getpid
-                0x0000000080001460                _kill
- .text          0x0000000080001478      0xac0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
-                0x00000000800015d4                am335x_clock_enable_l3_l4wkup
-                0x0000000080001740                am335x_clock_enable_uart_module
-                0x0000000080001800                am335x_clock_enable_gpio_module
-                0x0000000080001938                am335x_clock_enable_i2c_module
-                0x00000000800019e4                am335x_clock_enable_spi_module
-                0x0000000080001a54                am335x_clock_enable_timer_module
-                0x0000000080001bbc                am335x_clock_enable_mmc_module
-                0x0000000080001ca4                am335x_clock_enable_edma_module
-                0x0000000080001ebc                am335x_clock_enable_cpsw_module
- .text          0x0000000080001f38      0x390 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
-                0x0000000080001f38                am335x_uart_init
-                0x00000000800020fc                am335x_uart_set_baudrate
-                0x00000000800021bc                am335x_uart_tstc
-                0x0000000080002210                am335x_uart_read
-                0x0000000080002268                am335x_uart_write
- .text          0x00000000800022c8      0x4c0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
-                0x000000008000233c                am335x_mux_setup_uart_pins
-                0x00000000800023a0                am335x_mux_setup_i2c_pins
-                0x0000000080002404                am335x_mux_setup_spi_pins
-                0x0000000080002498                am335x_mux_setup_gpio_pin
-                0x0000000080002568                am335x_mux_setup_mmc_pins
-                0x0000000080002648                am335x_mux_setup_cpsw_pins
- .text          0x0000000080002788      0x114 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_udivsi3.o)
-                0x0000000080002788                __udivsi3
-                0x0000000080002788                __aeabi_uidiv
-                0x000000008000287c                __aeabi_uidivmod
- .text          0x000000008000289c        0x4 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_dvmd_tls.o)
-                0x000000008000289c                __aeabi_ldiv0
-                0x000000008000289c                __aeabi_idiv0
+ .text          0x0000000080001160        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
+ .text          0x0000000080001160      0x300 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
+                0x00000000800011f4                _read
+                0x0000000080001230                _write
+                0x0000000080001298                _lseek
+                0x00000000800012c4                _isatty
+                0x00000000800012e8                _fstat
+                0x000000008000131c                _close
+                0x0000000080001340                _sbrk
+                0x00000000800013e8                _exit
+                0x00000000800013fc                _init
+                0x0000000080001414                _fini
+                0x000000008000142c                _getpid
+                0x0000000080001448                _kill
+ .text          0x0000000080001460      0xac0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
+                0x00000000800015bc                am335x_clock_enable_l3_l4wkup
+                0x0000000080001728                am335x_clock_enable_uart_module
+                0x00000000800017e8                am335x_clock_enable_gpio_module
+                0x0000000080001920                am335x_clock_enable_i2c_module
+                0x00000000800019cc                am335x_clock_enable_spi_module
+                0x0000000080001a3c                am335x_clock_enable_timer_module
+                0x0000000080001ba4                am335x_clock_enable_mmc_module
+                0x0000000080001c8c                am335x_clock_enable_edma_module
+                0x0000000080001ea4                am335x_clock_enable_cpsw_module
+ .text          0x0000000080001f20      0x390 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
+                0x0000000080001f20                am335x_uart_init
+                0x00000000800020e4                am335x_uart_set_baudrate
+                0x00000000800021a4                am335x_uart_tstc
+                0x00000000800021f8                am335x_uart_read
+                0x0000000080002250                am335x_uart_write
+ .text          0x00000000800022b0      0x4c0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
+                0x0000000080002324                am335x_mux_setup_uart_pins
+                0x0000000080002388                am335x_mux_setup_i2c_pins
+                0x00000000800023ec                am335x_mux_setup_spi_pins
+                0x0000000080002480                am335x_mux_setup_gpio_pin
+                0x0000000080002550                am335x_mux_setup_mmc_pins
+                0x0000000080002630                am335x_mux_setup_cpsw_pins
+ .text          0x0000000080002770      0x114 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_udivsi3.o)
+                0x0000000080002770                __udivsi3
+                0x0000000080002770                __aeabi_uidiv
+                0x0000000080002864                __aeabi_uidivmod
+ .text          0x0000000080002884        0x4 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_dvmd_tls.o)
+                0x0000000080002884                __aeabi_ldiv0
+                0x0000000080002884                __aeabi_idiv0
 
-.glue_7         0x00000000800028a0        0x0
- .glue_7        0x00000000800028a0        0x0 linker stubs
+.glue_7         0x0000000080002888        0x0
+ .glue_7        0x0000000080002888        0x0 linker stubs
 
-.glue_7t        0x00000000800028a0        0x0
- .glue_7t       0x00000000800028a0        0x0 linker stubs
+.glue_7t        0x0000000080002888        0x0
+ .glue_7t       0x0000000080002888        0x0 linker stubs
 
-.vfp11_veneer   0x00000000800028a0        0x0
- .vfp11_veneer  0x00000000800028a0        0x0 linker stubs
+.vfp11_veneer   0x0000000080002888        0x0
+ .vfp11_veneer  0x0000000080002888        0x0 linker stubs
 
-.v4_bx          0x00000000800028a0        0x0
- .v4_bx         0x00000000800028a0        0x0 linker stubs
+.v4_bx          0x0000000080002888        0x0
+ .v4_bx         0x0000000080002888        0x0 linker stubs
 
-.iplt           0x00000000800028a0        0x0
- .iplt          0x00000000800028a0        0x0 .obj/bbb/main.o
+.iplt           0x0000000080002888        0x0
+ .iplt          0x0000000080002888        0x0 .obj/bbb/main.o
 
-.rodata         0x00000000800028a0     0x1234
+.rodata         0x0000000080002888     0x1328
                 0x0000000080002900                . = ALIGN (0x100)
- *fill*         0x00000000800028a0       0x60 
+ *fill*         0x0000000080002888       0x78 
  *(.rodata*)
- .rodata        0x0000000080002900       0x10 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
- .rodata        0x0000000080002910     0x11c4 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
+ .rodata        0x0000000080002900       0xdb .obj/bbb/main.o
+ *fill*         0x00000000800029db        0x1 
+ .rodata        0x00000000800029dc       0x10 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
+ .rodata        0x00000000800029ec     0x11c4 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
 
-.rel.dyn        0x0000000080003ad4        0x0
- .rel.iplt      0x0000000080003ad4        0x0 .obj/bbb/main.o
+.rel.dyn        0x0000000080003bb0        0x0
+ .rel.iplt      0x0000000080003bb0        0x0 .obj/bbb/main.o
 
-.data           0x0000000080003b00      0x124
-                0x0000000080003b00                . = ALIGN (0x100)
+.data           0x0000000080003c00      0x124
+                0x0000000080003c00                . = ALIGN (0x100)
  *(.data*)
- .data          0x0000000080003b00      0x100 .obj/bbb/main.o
-                0x0000000080003b00                res
-                0x0000000080003b04                incr
- .data          0x0000000080003c00        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
- .data          0x0000000080003c00        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
- .data          0x0000000080003c00        0xc /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
- .data          0x0000000080003c0c       0x18 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
- .data          0x0000000080003c24        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
- .data          0x0000000080003c24        0x0 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_udivsi3.o)
- .data          0x0000000080003c24        0x0 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_dvmd_tls.o)
+ .data          0x0000000080003c00      0x100 .obj/bbb/main.o
+                0x0000000080003c00                res
+                0x0000000080003c04                incr
+ .data          0x0000000080003d00        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
+ .data          0x0000000080003d00        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
+ .data          0x0000000080003d00        0xc /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
+ .data          0x0000000080003d0c       0x18 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
+ .data          0x0000000080003d24        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
+ .data          0x0000000080003d24        0x0 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_udivsi3.o)
+ .data          0x0000000080003d24        0x0 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_dvmd_tls.o)
 
-.igot.plt       0x0000000080003c24        0x0
- .igot.plt      0x0000000080003c24        0x0 .obj/bbb/main.o
-                0x0000000080003d00                . = ALIGN (0x100)
-                0x0000000080003d00                __exidx_start = .
+.igot.plt       0x0000000080003d24        0x0
+ .igot.plt      0x0000000080003d24        0x0 .obj/bbb/main.o
+                0x0000000080003e00                . = ALIGN (0x100)
+                0x0000000080003e00                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x0000000080003d00                __exidx_end = .
+                0x0000000080003e00                __exidx_end = .
 
-.bss            0x0000000080003d00     0x1200
-                0x0000000080003d00                . = ALIGN (0x100)
-                0x0000000080003d00                __bss_start__ = .
+.bss            0x0000000080003e00     0x1100
+                0x0000000080003e00                . = ALIGN (0x100)
+                0x0000000080003e00                __bss_start__ = .
  *(.bss*)
- .bss           0x0000000080003d00      0x100 .obj/bbb/main.o
-                0x0000000080003d00                i
+ .bss           0x0000000080003e00        0x0 .obj/bbb/main.o
  .bss           0x0000000080003e00     0x1000 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
  .bss           0x0000000080004e00        0x4 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
  .bss           0x0000000080004e04        0x0 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
@@ -185,15 +186,15 @@ OUTPUT(app_a elf32-littlearm)
  .comment       0x0000000000000021       0x22 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
  .comment       0x0000000000000021       0x22 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
 
-.debug_line     0x0000000000000000      0x6ab
- .debug_line    0x0000000000000000       0x4d .obj/bbb/main.o
- .debug_line    0x000000000000004d       0x88 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
- .debug_line    0x00000000000000d5      0x101 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
- .debug_line    0x00000000000001d6      0x1bd /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
- .debug_line    0x0000000000000393      0x124 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
- .debug_line    0x00000000000004b7      0x115 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
- .debug_line    0x00000000000005cc       0x7e /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_udivsi3.o)
- .debug_line    0x000000000000064a       0x61 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_dvmd_tls.o)
+.debug_line     0x0000000000000000      0x6a6
+ .debug_line    0x0000000000000000       0x48 .obj/bbb/main.o
+ .debug_line    0x0000000000000048       0x88 /home/lmi/workspace/se12/bbb/source/libbbb.a(crt0.o)
+ .debug_line    0x00000000000000d0      0x101 /home/lmi/workspace/se12/bbb/source/libbbb.a(bbb_syscall.o)
+ .debug_line    0x00000000000001d1      0x1bd /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_clock.o)
+ .debug_line    0x000000000000038e      0x124 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_uart.o)
+ .debug_line    0x00000000000004b2      0x115 /home/lmi/workspace/se12/bbb/source/libbbb.a(am335x_mux.o)
+ .debug_line    0x00000000000005c7       0x7e /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_udivsi3.o)
+ .debug_line    0x0000000000000645       0x61 /usr/lib/gcc/arm-none-eabi/5.2.0/libgcc.a(_dvmd_tls.o)
 
 .debug_info     0x0000000000000000     0x1d9f
  .debug_info    0x0000000000000000       0x50 .obj/bbb/main.o

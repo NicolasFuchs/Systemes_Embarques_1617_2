@@ -132,5 +132,5 @@ banner:	.ascii "\n"
 	.ascii "An introduction to the development environment\n"
 	.ascii "--> Simple ARM assembler program to experiment the Embedded System\n"
 	.ascii "    Laboratory development environment under Git and Eclipse.\n"
-	.asciz "\n"*/
+	.asciz "\n"
 
