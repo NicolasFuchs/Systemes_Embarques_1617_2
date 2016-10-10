@@ -32,9 +32,6 @@
 #define true 1
 #define false 0
 
-.bss
-v: .space MAX
-
 // Implementation of assembler functions and methods
 	.text
 	.align	8
@@ -46,25 +43,17 @@ main:	nop
 
 //------- start to implement your code here---------
 
-i:	mov r0, #2							// initialisation de i : i = 2
-	b t1
+	ldr	r4, =0
+1:	ldr	r0, =format
+	mov	r1, r4
+	bl	printf
+	add	r4, #1
+	cmp	r4, #NUMBERS
+	blo	1b
 
-1:  mov r1, r0, lsl #1					// initialisation de j : j = i*2
-	b t2
-
-2:  ldr r2, =v							// initialisation des cases du tableau v à false
-	mov r3, #false
-	strB r3,[r2,r1]
-
-	add r1, r1, r0						// incrémentation de j : j += i
-
-t2: cmp r1, #MAX						// test de la 2ème boucle : j < MAX
-		blo 2b
-
-	add r0, #1							// incrémentation de i : i++
-
-t1: cmp r0, #MAX						// test de la 1ère boucle : i < MAX
-	blo 1b
+	// return 0
+	ldr	r0, =0
+	bx	lr
 
 
 // Constant variables declation (rom data)
