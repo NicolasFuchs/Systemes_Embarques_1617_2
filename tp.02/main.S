@@ -45,9 +45,10 @@ array:	.space 	MAX
 	.align	8
 
 main:	nop
+		b		opt
 
 // 1st mark all numbers as prime number
-		mov		r4, #0
+std:	mov		r4, #0
 		ldr		r5,	=true
 		ldrb	r5,	[r5]
 		ldr		r6,	=array
@@ -87,13 +88,68 @@ loop4:	cmp		r4,	#MAX
 next:	add		r4,	#1
 		b		loop4
 
+// Print code
 prt:	mov		r1, r4
 		ldr		r0, =format
 		bl		printf
 		b		next
 
+// Finish loop
 finish:	nop
 		b		finish
+
+// Optimized implementation
+/*
+ * Optimisations :
+ * 1) Comme le tableau est initialisé à 0, nous pouvons changer sa signification est dire qu'il
+ *    s'agit des nombres qui ne sont pas premiers.
+ *
+ * 2) Nous pouvons insérer dans la boucle qui parcours les nombres de 2 à MAX le printf.
+ */
+opt:	ldr		r4,	=array
+		ldr		r5, =true
+		ldrb	r5, [r5]
+		mov		r6, #2
+		mov		r7, #2
+loop:	cmp 	r6,	#MAX
+		bhs		fshopt
+		mul		r8, r6, r7
+loopi:	cmp		r8, #MAX
+		bhs		outi
+		strb	r5,	[r4,r8]
+		add		r8,	r6
+		b		loopi
+outi:	ldrb	r9, [r4,r6]
+		cmp		r9, r5
+		bne		prtopt
+nxtopt:	add		r6,	#1
+		b		loop
+prtopt:	mov		r1, r6
+		ldr		r0, =format
+		bl		printf
+		b		nxtopt
+fshopt:	nop
+		b		fshopt
+
+// Code équivalent en JAVA
+/*
+ * public class Main {
+ *
+ *    private static final int MAX = 100;
+ *
+ *    public static void main(String[] args) {
+ *
+ *       boolean[] isNotAPrimeNumber = new boolean[MAX];
+ *
+ *       for (int i = 2; i < MAX; i++) {
+ *            for (int j = i * 2; j < MAX; j += i)
+ *                isNotAPrimeNumber[j] = true;
+ *            if (!isNotAPrimeNumber[i])
+ *                System.out.println(i);
+ *       }
+ *    }
+ * }
+ */
 
 // Constant variables declation (rom data)
 	.section .rodata
