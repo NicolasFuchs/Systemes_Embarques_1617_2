@@ -22,12 +22,12 @@
  *		7-segment display of the Beaglebone Black HEIA-FR extension 
  *		board.
  *
- * Author: 	<author's>
- * Date: 	<date>
+ * Author: 	Charlotte Junod and Nicolas Fuchs
+ * Date: 	21.10.16
  */
 
 /* Export public symbols */
-	.global main
+	.global main,init_mux,gpio_config,gpio_turn,sleep_val
 
 /*-- constants declaration -------------------------------------------------- */
 
@@ -35,6 +35,7 @@
 #define PADMUX		0x44e10000
 
 // 7-segment gpio offset in pad mux
+						//toutes les led
 #define PAD_OFS_DIG1	0x890
 #define PAD_OFS_SEGA	0x958
 #define PAD_OFS_SEGB	0x95c
@@ -50,7 +51,7 @@
 
 // gpio register offset
 #define OE		0x0134
-#define CLEAR		0x0190
+#define CLEAR	0x0190
 #define SET		0x0194
 
 // 7-segment gpio pin
@@ -73,6 +74,30 @@
 #define SEGF		(1<<PIN_SEGF)
 #define SEGG		(1<<PIN_SEGG)
 
+	.section .rodata
+	.align 4
+// variables declaration
+init_mux:	.long 0x4f
+sleep_val:	.long 1000
+gpio_config:
+	.long GPIO2,DIG1,PAD_OFS_DIG1,1
+	.long GPIO0,SEGA,PAD_OFS_SEGA,0
+	.long GPIO0,SEGB,PAD_OFS_SEGB,0
+	.long GPIO0,SEGC,PAD_OFS_SEGC,0
+	.long GPIO0,SEGD,PAD_OFS_SEGD,0
+	.long GPIO0,SEGE,PAD_OFS_SEGE,0
+	.long GPIO0,SEGF,PAD_OFS_SEGF,0
+	.long GPIO0,SEGG,PAD_OFS_SEGG,0
+	.long 0,0,0,0
+
+gpio_turn:
+	.long GPIO0,SEGA
+	.long GPIO0,SEGB
+	.long GPIO0,SEGC
+	.long GPIO0,SEGD
+	.long GPIO0,SEGE
+	.long GPIO0,SEGF
+	.long GPIO0,SEGG
 
 /*-- implementation of local methods ---------------------------------------- */
 	.text
@@ -84,8 +109,8 @@
 
 main:	nop
 	// print banner...
-	ldr	r0, =banner
-	bl 	printf
+	//ldr	r0, =banner
+	//bl 	printf
 
 	// initialize the gpio module #0 and #2
 	mov	r0, #0
@@ -94,9 +119,78 @@ main:	nop
 	bl	am335x_gpio_init
 
 
-	// while(true);
-1:	nop
-	b	1b
+//---------------------- Our code: ----------------------------------------------------
+	//déroulement:
+
+	//initialisation
+	ldr r8,=gpio_config
+init_loop:
+	ldmia r8!,{r0-r3}
+	cmp r1,#0
+	beq exit_init_loop
+	bl init
+	b 	init_loop
+exit_init_loop: nop
+
+	//éteindre a
+serpentin:
+
+turn_loop:
+	ldr r8,=gpio_turn
+	ldmia r8!,{r0-r1}
+	cmp r1,#0
+	beq exit_turn_loop
+	bl trigger
+	b turn_loop
+exit_turn_loop:
+	b serpentin
+
+init:
+	//Routine d'initialisation (init)
+	/*
+	* r0 = gpio
+	* r1 = 1<<pin
+	* r2 = padmux_offset
+	* r3 = state
+	*/
+	push {lr}
+	//init mux
+	ldr r4,=PADMUX
+	ldr r5,=0x4f
+	str r5,[r4,r2]
+
+	//init oe
+	ldr r4,[r0,#OE]
+	bic r4,r1
+	str r4,[r0,#OE]
+
+	cmp r3,#0
+	strne r1,[r0,#SET]
+	streq r1,[r0,#CLEAR]
+
+	pop {pc}
+
+trigger:
+	//Routine d'activation des led (trigger)
+	/*
+	* r0 = gpio
+	* r1 = 1<<pin
+	*/
+	push {lr}
+
+	str r1,[r0,#SET]
+	ldr r3,=sleep_val
+	str r1,[r0,#CLEAR]
+
+	pop {pc}
+
+sleep:
+	nop
+1:	sub r3,#1
+	bpl 1b
+	bx lr
+
+//---------------------- End of our code-----------------------------------------------
 
 // String definition used for message outputs (printf)
 	.section .rodata
