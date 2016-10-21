@@ -50,7 +50,7 @@
 
 // gpio register offset
 #define OE		0x0134
-#define CLEAR		0x0190
+#define CLEAR	0x0190
 #define SET		0x0194
 
 // 7-segment gpio pin
