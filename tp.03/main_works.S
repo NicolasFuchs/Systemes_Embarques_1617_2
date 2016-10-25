@@ -23,7 +23,7 @@
  *		board.
  *
  * Author: 	Charlotte Junod and Nicolas Fuchs
- * Date: 	21.10.16
+ * Date: 	25.10.16
  */
 
 /* Export public symbols */
