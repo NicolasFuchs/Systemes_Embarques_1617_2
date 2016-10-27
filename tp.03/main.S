@@ -78,7 +78,7 @@
 	.align 4
 // variables declaration
 init_mux:	.long 0x4f
-sleep_val:	.long 1000
+sleep_val:	.long 500000000
 gpio_config:
 	.long GPIO2,DIG1,PAD_OFS_DIG1,1
 	.long GPIO0,SEGA,PAD_OFS_SEGA,0
