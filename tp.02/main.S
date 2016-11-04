@@ -19,49 +19,140 @@
  *
  * Purpose:	Program to generate and print all the primer numbers up to MAX.
  *
- * Author: 	<author's>
- * Date: 	<date>
+ * Author: 	Jonathan Rial & Alan Sueur
+ * Date: 	14 october 2016
  */
 
 // Export public symbols
 	.global main
 
 // Declaration of the constants
-#define NUMBERS 10
+#define MAX 100
+
+// Initialized variables declation
+		.data
+		.align	8
+true:	.byte	0xFF
+false:	.byte	0x00
+
+// Uninitialized variables declation
+		.bss
+		.align
+array:	.space 	MAX
 
 // Implementation of assembler functions and methods
 	.text
 	.align	8
 
 main:	nop
-	// print banner...
-	ldr	r0, =banner
-	bl 	printf
+		b		opt
 
-	// start to implement your code here
+// 1st mark all numbers as prime number
+std:	mov		r4, #0
+		ldr		r5,	=true
+		ldrb	r5,	[r5]
+		ldr		r6,	=array
+loop1:	cmp 	r4,	#MAX
+		bhs		out1
+		strb	r5,	[r6,r4]
+		add		r4,	#1
+		b		loop1
+out1:	nop
 
-	ldr	r4, =0
-1:	ldr	r0, =format
-	mov	r1, r4
-	bl	printf
-	add	r4, #1
-	cmp	r4, #NUMBERS
-	blo	1b
+// 2nd mark all multiples as not a prime number
+		mov		r4, #2
+		mov		r7, #2
+		ldr		r5, =false
+		ldrb	r5, [r5]
+loop2:	cmp 	r4,	#MAX
+		bhs		out2
+		mul		r8, r4, r7
+loop3:	cmp		r8, #MAX
+		bhs		out3
+		strb	r5,	[r6,r8]
+		add		r8,	r4
+		b		loop3
+out3:	add		r4,	#1
+		b		loop2
+out2:	nop
 
-	// return 0
-	ldr	r0, =0
-	bx	lr
+// 3rd print all prime numbers
+		mov		r4, #2
+		ldr		r5,	=true
+		ldrb	r5,	[r5]
+loop4:	cmp		r4,	#MAX
+		bhs		finish
+		ldrb	r9, [r6,r4]
+		cmp		r9, r5
+		beq		prt
+next:	add		r4,	#1
+		b		loop4
 
+// Print code
+prt:	mov		r1, r4
+		ldr		r0, =format
+		bl		printf
+		b		next
+
+// Finish loop
+finish:	nop
+		b		finish
+
+// Optimized implementation
+/*
+ * Optimisations :
+ * 1) Comme le tableau est initialisé à 0, nous pouvons changer sa signification est dire qu'il
+ *    s'agit des nombres qui ne sont pas premiers.
+ *
+ * 2) Nous pouvons insérer dans la boucle qui parcours les nombres de 2 à MAX le printf.
+ */
+opt:	ldr		r4,	=array
+		ldr		r5, =true
+		ldrb	r5, [r5]
+		mov		r6, #2
+		mov		r7, #2
+loop:	cmp 	r6,	#MAX
+		bhs		fshopt
+		mul		r8, r6, r7
+loopi:	cmp		r8, #MAX
+		bhs		outi
+		strb	r5,	[r4,r8]
+		add		r8,	r6
+		b		loopi
+outi:	ldrb	r9, [r4,r6]
+		cmp		r9, r5
+		bne		prtopt
+nxtopt:	add		r6,	#1
+		b		loop
+prtopt:	mov		r1, r6
+		ldr		r0, =format
+		bl		printf
+		b		nxtopt
+fshopt:	nop
+		b		fshopt
+
+// Code équivalent en JAVA
+/*
+ * public class Main {
+ *
+ *    private static final int MAX = 100;
+ *
+ *    public static void main(String[] args) {
+ *
+ *       boolean[] isNotAPrimeNumber = new boolean[MAX];
+ *
+ *       for (int i = 2; i < MAX; i++) {
+ *            for (int j = i * 2; j < MAX; j += i)
+ *                isNotAPrimeNumber[j] = true;
+ *            if (!isNotAPrimeNumber[i])
+ *                System.out.println(i);
+ *       }
+ *    }
+ * }
+ */
 
 // Constant variables declation (rom data)
 	.section .rodata
 
 // String definition used for message outputs (printf)
-banner:	.ascii "\n"
-	.ascii "HEIA-FR - Embedded Systems 1 Laboratory\n"
-	.ascii "An introduction the ARM's assembler language\n"
-	.ascii "--> Program to generate and print all the primer numbers up to MAX\n"
-	.asciz "\n"
-
 format:	.asciz "%d\n"
-
