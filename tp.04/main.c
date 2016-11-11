@@ -22,21 +22,45 @@
  * 		7-segment display of the HEIA-FR extension card of the 
  *		Beaglebone Black board 
  *
- * Author: 	<author's>
+ * Author: 	<Nicolas Fuchs>
  * Date: 	<date>
  */
 
 #include <stdio.h>
 #include <stdbool.h>
+#include "am335x_gpio.h"
+#include "wheel.h"
+#include "seg7.h"
 
-int main()
-{
+int main(){
 	// print program banner
 	printf ("HEIA-FR - Embedded Systems 1 Laboratory\n"
 		"An introduction the C programming language\n"
 		"--> 7-segment and wheel demo program\n");
 
+	seg7_init();
+	wheel_init();
+
+	int count = 0;
+	enum wheel_states state = wheel_get_state();
+
 	while(true) {
+		state = wheel_get_state();
+		switch(state){
+		case INCR:
+			if(count<99) count++;
+			break;
+		case DECR:
+			if(count>-99) count--;
+			break;
+		case RESET:
+			count=0;
+			break;
+		case NONE:
+		default:
+		}
+
+		seg7_display(count);
 	}
 
 	return 0;
