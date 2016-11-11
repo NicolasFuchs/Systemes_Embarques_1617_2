@@ -23,7 +23,7 @@
  *		board.
  *
  * Author: 	Charlotte Junod and Nicolas Fuchs
- * Date: 	21.10.16
+ * Date: 	25.10.16
  */
 
 /* Export public symbols */
@@ -78,7 +78,7 @@
 	.align 4
 // variables declaration
 init_mux:	.long 0x4f
-sleep_val:	.long 500000000
+sleep_val:	.long 10000
 gpio_config:
 	.long GPIO2,DIG1,PAD_OFS_DIG1,1
 	.long GPIO0,SEGA,PAD_OFS_SEGA,0
@@ -93,11 +93,13 @@ gpio_config:
 gpio_turn:
 	.long GPIO0,SEGA
 	.long GPIO0,SEGB
-	.long GPIO0,SEGC
-	.long GPIO0,SEGD
-	.long GPIO0,SEGE
-	.long GPIO0,SEGF
 	.long GPIO0,SEGG
+	.long GPIO0,SEGE
+	.long GPIO0,SEGD
+	.long GPIO0,SEGC
+	.long GPIO0,SEGG
+	.long GPIO0,SEGF
+	.long 0,0
 
 /*-- implementation of local methods ---------------------------------------- */
 	.text
@@ -129,14 +131,13 @@ init_loop:
 	cmp r1,#0
 	beq exit_init_loop
 	bl init
-	b 	init_loop
+	b  init_loop
 exit_init_loop: nop
 
-	//éteindre a
 serpentin:
 
-turn_loop:
 	ldr r8,=gpio_turn
+turn_loop:
 	ldmia r8!,{r0-r1}
 	cmp r1,#0
 	beq exit_turn_loop
@@ -180,14 +181,21 @@ trigger:
 
 	str r1,[r0,#SET]
 	ldr r3,=sleep_val
+	ldr r3,[r3]
+	bl sleep
 	str r1,[r0,#CLEAR]
 
 	pop {pc}
 
 sleep:
+	//Routine pour attendre
+	/*
+	* r3=temps à attendre
+	*/
 	nop
 1:	sub r3,#1
-	bpl 1b
+ 	cmp r3,#0
+	bne 1b
 	bx lr
 
 //---------------------- End of our code-----------------------------------------------
