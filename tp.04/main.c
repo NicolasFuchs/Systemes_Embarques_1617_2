@@ -58,6 +58,7 @@ int main(){
 			break;
 		case NONE:
 		default:
+			break;
 		}
 
 		seg7_display(count);

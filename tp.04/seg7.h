@@ -8,6 +8,7 @@
 #ifndef SEG7_H_
 #define SEG7_H_
 
+void seg7_init();
 void seg7_display(int number);
 
 #endif /* SEG7_H_ */
