@@ -36,7 +36,7 @@ static const struct gpio_init gpio_init[] = {
 		{SEG_GPIO, 27, false},	//SEGG
 };
 
-bool display[10][7] = {									//indice = numéro affiché
+bool display[10][7] = {								//indice = numéro affiché
 		{true,true,true,true,true,true,false},		//0
 		{false,true,true,false,false,false,false},	//1
 		{true,true,false,true,true,false,true},		//2
@@ -66,14 +66,14 @@ void seg7_display(int number) {
 	int rightdig = number%10;
 	am335x_gpio_setup_pin_out(DIG_GPIO, 3, true);	//DIG2
 	for(int i=4;i<11;i++){
-		am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin_nr, display[rightdig][i-4]);
+		am335x_gpio_change_state(gpio_init[i].module,gpio_init[i].pin_nr, display[rightdig][i-4]);
 	}
 	if(number>=10){
 		am335x_gpio_setup_pin_out(DIG_GPIO, 2, true);	//DIG1
 		for(int i=4;i<11;i++){
-			am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin_nr, display[leftdig][i-4]);
+			am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin_nr, display[leftdig][i-4]);
 		}
 	}
-	if(neg) am335x_gpio_setup_pin_out(DIG_GPIO, 5, true);
+	if(neg) am335x_gpio_change_state(DIG_GPIO, 5, true);
 
 }
