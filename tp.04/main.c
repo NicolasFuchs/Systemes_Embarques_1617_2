@@ -33,6 +33,7 @@
 #include "seg7.h"
 
 int main(){
+
 	// print program banner
 	printf ("HEIA-FR - Embedded Systems 1 Laboratory\n"
 		"An introduction the C programming language\n"
@@ -48,21 +49,24 @@ int main(){
 		state = wheel_get_state();
 		switch(state){
 		case INCR:
+			printf("%d +1\n",count);
 			if(count<99) count++;
 			break;
 		case DECR:
+			printf("%d -1\n",count);
 			if(count>-99) count--;
 			break;
 		case RESET:
+			printf("reset");
 			count=0;
 			break;
 		case NONE:
 		default:
+			break;
 		}
-
+		printf("%d\n",count);
 		seg7_display(count);
 	}
-
 	return 0;
 }
 
