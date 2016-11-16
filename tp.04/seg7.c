@@ -34,16 +34,16 @@ static const struct gpio_init gpio_init[] = {
 };
 
 bool display[] = {
-		{true,true,true,true,true,true,false},
-		{false,true,true,false,false,false,false},
-		{true,true,false,true,true,false,true},
-		{true,true,true,true,false,false,true},
-		{false,true,true,false,false,false,true},
-		{true,false,true,true,false,true,false},
-		{true,false,true,true,true,true,true},
-		{true,true,true,false,false,false,false},
-		{true,true,true,true,true,true,true},
-		{true,true,true,true,false,false,true}
+	{true,true,true,true,true,true,false},
+	{false,true,true,false,false,false,false},
+	{true,true,false,true,true,false,true},
+	{true,true,true,true,false,false,true},
+	{false,true,true,false,false,false,true},
+	{true,false,true,true,false,true,false},
+	{true,false,true,true,true,true,true},
+	{true,true,true,false,false,false,false},
+	{true,true,true,true,true,true,true},
+	{true,true,true,true,false,false,true}
 };
 
 void seg7_init() {
@@ -53,15 +53,24 @@ void seg7_init() {
 	for (int i = 0; i < t; i++) {
 		am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin_nr, gpio_init[i].state);
 	}
-
-}
+};
 
 void seg7_display(int number) {
-	int leftdig = number/10;
-	int rightdig = number%10;
-	if (number < 10) {
-
-	} else {
-
+	//int leftdig = number/10;
+	//int rightdig = number%10;
+	switch(number%10) {
+		case 0 : break;
+		case 1 : break;
+		case 2 : break;
+		case 3 : break;
+		case 4 : break;
+		case 5 : break;
+		case 6 : break;
+		case 7 : break;
+		case 8 : break;
+		case 9 : break;
+		if (number > 9) {
+			am335x_gpio_setup_pin_out();
+		}
 	}
-}
+};
