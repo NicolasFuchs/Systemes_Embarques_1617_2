@@ -13,32 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project:  HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	Introduction the C programming language
+ * Abstract: Introduction the C programming language
  *
- * Purpose:	Simple C program implementing basic access to the GPIO modules
- *		of the AM3358 microprocessor to control the wheel and the
- * 		7-segment display of the HEIA-FR extension card of the 
- *		Beaglebone Black board 
+ * Purpose: Simple C program implementing basic access to the GPIO modules
+ *          of the AM3358 microprocessor to control the wheel and the
+ *          7-segment display of the HEIA-FR extension card of the
+ *          Beaglebone Black board
  *
- * Author: 	<author's>
- * Date: 	<date>
+ * Author: 	Jonathan Rial & Alan Sueur
+ * Date: 	November 2016
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdbool.h>
 
-int main()
-{
+#include "wheel.h"
+
+int32_t counter;
+
+int main() {
 	// print program banner
-	printf ("HEIA-FR - Embedded Systems 1 Laboratory\n"
-		"An introduction the C programming language\n"
-		"--> 7-segment and wheel demo program\n");
+	printf("HEIA-FR - Embedded Systems 1 Laboratory\n"
+			"An introduction the C programming language\n"
+			"--> 7-segment and wheel demo program\n");
 
-	while(true) {
+	while (true) {
+		//seg7_display_value(counter);
+		enum wheel_state state = wheel_get_state();
+		switch (state) {
+		case WHEEL_INCR:
+			if (counter < 99)
+				counter++;
+			printf("Counter: " + counter);
+			break;
+		case WHEEL_DECR:
+			if (counter > -99)
+				counter--;
+			printf("Counter: " + counter);
+			break;
+		case WHEEL_RESET:
+			counter = 0;
+			break;
+		default:
+			break;
+		}
 	}
-
 	return 0;
 }
 
