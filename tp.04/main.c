@@ -31,28 +31,29 @@
 #include <stdbool.h>
 
 #include "wheel.h"
+#include "seg7.h"
 
 int32_t counter;
 
 int main() {
+	wheel_init();
+	seg7_init();
 	// print program banner
 	printf("HEIA-FR - Embedded Systems 1 Laboratory\n"
 			"An introduction the C programming language\n"
 			"--> 7-segment and wheel demo program\n");
 
 	while (true) {
-		//seg7_display_value(counter);
+		seg7_display_value(counter);
 		enum wheel_state state = wheel_get_state();
 		switch (state) {
 		case WHEEL_INCR:
 			if (counter < 99)
 				counter++;
-			printf("Counter: " + counter);
 			break;
 		case WHEEL_DECR:
 			if (counter > -99)
 				counter--;
-			printf("Counter: " + counter);
 			break;
 		case WHEEL_RESET:
 			counter = 0;
