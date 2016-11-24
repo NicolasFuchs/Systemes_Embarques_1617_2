@@ -27,12 +27,23 @@
  * Date: 	November 2016
  */
 
+/**
+ * Etats possibles de la roue
+ */
 enum wheel_state {
 	WHEEL_NONE, WHEEL_INCR, WHEEL_DECR, WHEEL_RESET
 };
 
+/**
+ * Méthode d'initialisation de la roue
+ */
 void wheel_init();
 
+/**
+ * Méthode permettant de retouner l'état de la roue
+ *
+ * @return L'état de la roue
+ */
 enum wheel_state wheel_get_state();
 
 #endif

@@ -33,16 +33,23 @@
 #include "wheel.h"
 #include "seg7.h"
 
+// Variable compteur
 int32_t counter;
 
+/**
+ * Méthode principale du programme
+ */
 int main() {
+	// Initialisation de la roue et de l'affichage 7 segments
 	wheel_init();
 	seg7_init();
-	// print program banner
+
+	// Afficher la bannière du programme
 	printf("HEIA-FR - Embedded Systems 1 Laboratory\n"
 			"An introduction the C programming language\n"
 			"--> 7-segment and wheel demo program\n");
 
+	// Boucle infinie permettant de surveiller l'état de la roue et d'afficher le compteur
 	while (true) {
 		seg7_display_value(counter);
 		enum wheel_state state = wheel_get_state();

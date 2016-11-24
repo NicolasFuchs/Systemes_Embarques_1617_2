@@ -78,62 +78,79 @@ struct gpio_init {
 };
 
 // Données pour l'inialisation des GPIO
-static const struct gpio_init gpio_init[] = {
-	{DIG_GPIO, PIN_DIG1, false},
-	{DIG_GPIO, PIN_DIG2, false},
+static const struct gpio_init gpio_init[] = { { DIG_GPIO, PIN_DIG1, false }, {
+DIG_GPIO, PIN_DIG2, false },
 
-	{DP_GPIO, PIN_DP1, false},
-	{DP_GPIO, PIN_DP2, false},
+{ DP_GPIO, PIN_DP1, false }, { DP_GPIO, PIN_DP2, false },
 
-	{SEG_GPIO, PIN_SEGA, false},
-	{SEG_GPIO, PIN_SEGB, false},
-	{SEG_GPIO, PIN_SEGC, false},
-	{SEG_GPIO, PIN_SEGD, false},
-	{SEG_GPIO, PIN_SEGE, false},
-	{SEG_GPIO, PIN_SEGF, false},
-	{SEG_GPIO, PIN_SEGG, false},
-};
+{ SEG_GPIO, PIN_SEGA, false }, { SEG_GPIO, PIN_SEGB, false }, { SEG_GPIO,
+PIN_SEGC, false }, { SEG_GPIO, PIN_SEGD, false }, { SEG_GPIO, PIN_SEGE,
+false }, { SEG_GPIO, PIN_SEGF, false }, { SEG_GPIO, PIN_SEGG, false }, };
 
 // Données pour l'affichage des chiffres
-static const uint32_t seg7[] = {
-	(SEGA + SEGB + SEGC + SEGD + SEGE + SEGF), // 0
-	(SEGB + SEGC), // 1
-	(SEGA + SEGB + SEGG + SEGE + SEGD), // 2
-	(SEGA + SEGB + SEGG + SEGC + SEGD), // 3
-	(SEGF + SEGG + SEGB + SEGC), // 4
-	(SEGA + SEGF + SEGG + SEGC + SEGD),// 5
-	(SEGA + SEGF + SEGE + SEGD + SEGC + SEGG), // 6
-	(SEGA + SEGB + SEGC), // 7
-	(SEGA + SEGB + SEGC + SEGD + SEGE + SEGF + SEGG), // 8
-	(SEGA + SEGF + SEGG + SEGB + SEGC + SEGD), // 9
-};
+static const uint32_t seg7[] = { (SEGA + SEGB + SEGC + SEGD + SEGE + SEGF), // 0
+		(SEGB + SEGC), // 1
+		(SEGA + SEGB + SEGG + SEGE + SEGD), // 2
+		(SEGA + SEGB + SEGG + SEGC + SEGD), // 3
+		(SEGF + SEGG + SEGB + SEGC), // 4
+		(SEGA + SEGF + SEGG + SEGC + SEGD), // 5
+		(SEGA + SEGF + SEGE + SEGD + SEGC + SEGG), // 6
+		(SEGA + SEGB + SEGC), // 7
+		(SEGA + SEGB + SEGC + SEGD + SEGE + SEGF + SEGG), // 8
+		(SEGA + SEGF + SEGG + SEGB + SEGC + SEGD), // 9
+		};
 
+/**
+ * Méthode d'initialisation de l'affichage 7 segments
+ */
 void seg7_init() {
 	// Initialisation des modules GPIO
 	am335x_gpio_init(AM335X_GPIO0);
 	am335x_gpio_init(AM335X_GPIO2);
 
 	// Initialisation des GPIO, DP et DIG
-	for(uint32_t i = 0; i < ARRAY_OF(gpio_init); ++i){
-		am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin, gpio_init[i].state);
+	for (uint32_t i = 0; i < ARRAY_OF(gpio_init); ++i) {
+		am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin,
+				gpio_init[i].state);
 	}
 }
 
+/**
+ * Méthode pour afficher une valeur sur l'arffichage 7 segments
+ *
+ * @param chiffre à afficher
+ */
 void seg7_display_value(int32_t counter) {
+	// Activation de l'affichage gauche
 	am335x_gpio_setup_pin_out(DIG_GPIO, PIN_DIG1, true);
+
+	// Tester si la valeur est négative
 	if (counter < 0) {
+		// Si oui, afficher le point en haut à gauche de l'affichage
 		am335x_gpio_setup_pin_out(DP_GPIO, PIN_DP1, true);
 		am335x_gpio_setup_pin_out(DP_GPIO, PIN_DP1, false);
+		// Rendre le compteur positif
 		counter = counter * -1;
 	}
+
+	// Chiffre à afficher sur l'affichage gauche
 	int32_t leftDigit = counter / 10;
+
+	// Chiffre à afficher sur l'affichage droite
 	int32_t rightDigit = counter % 10;
+
+	// Afficher le chiffre gauche
 	am335x_gpio_change_states(SEG_GPIO, seg7[leftDigit], true);
 	am335x_gpio_change_states(SEG_GPIO, seg7[leftDigit], false);
+
+	// Désactivation de l'affichage gauche
 	am335x_gpio_setup_pin_out(DIG_GPIO, PIN_DIG1, false);
-	//====================================================
+
+	// Activation de l'affichage droite
 	am335x_gpio_setup_pin_out(DIG_GPIO, PIN_DIG2, true);
 	am335x_gpio_change_states(SEG_GPIO, seg7[rightDigit], true);
 	am335x_gpio_change_states(SEG_GPIO, seg7[rightDigit], false);
+
+	// Désactivation de l'affichage droite
 	am335x_gpio_setup_pin_out(DIG_GPIO, PIN_DIG2, false);
 }
