@@ -56,8 +56,7 @@ void seg7_init() {
 	for (int i = 0; i < t; i++) {
 		am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin_nr, gpio_init[i].state);
 	}
-
-}
+};
 
 void seg7_display(int number) {
 	bool neg = false;
@@ -79,6 +78,11 @@ void seg7_display(int number) {
 			am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin_nr, display[leftdig][i-4]);
 		}
 	}
-	if(neg) am335x_gpio_change_state(DIG_GPIO, 5, true);
+	if (neg) {
+		am335x_gpio_change_state(DIG_GPIO, 5, true);
+	} else {
+		am335x_gpio_change_state(DIG_GPIO, 5, false);
+	}
+
 
 }
