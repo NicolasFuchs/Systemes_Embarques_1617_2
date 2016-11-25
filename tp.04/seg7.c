@@ -60,15 +60,20 @@ void seg7_init() {
 }
 
 void seg7_display(int number) {
-	bool neg = number<0 ? true:false;
-	if(number<0) number = -number;
+	bool neg = false;
+	if(number<0){
+		neg=true;
+		number = -number;
+	}
 	int leftdig = number/10;
 	int rightdig = number%10;
 	am335x_gpio_setup_pin_out(DIG_GPIO, 3, true);	//DIG2
 	for(int i=4;i<11;i++){
 		am335x_gpio_change_state(gpio_init[i].module,gpio_init[i].pin_nr, display[rightdig][i-4]);
 	}
+	for(int i=100;i>0;i--);			//attendre
 	if(number>=10){
+		//METTRE TOUT A ZERO --> à faire
 		am335x_gpio_setup_pin_out(DIG_GPIO, 2, true);	//DIG1
 		for(int i=4;i<11;i++){
 			am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin_nr, display[leftdig][i-4]);

@@ -48,13 +48,12 @@ enum wheel_states wheel_get_state(){
 	}
 	if(cha==chb && prev_state!=NONE){
 		state=NONE;
+		a_prev=cha;
+		b_prev=chb;
+		prev_state=state;
 	}
 
-	a_prev=cha;
-	b_prev=chb;
-	prev_state=state;
-
-	if(sw){
+	if(!sw){
 		state=RESET;
 	}
 	return state;
