@@ -77,11 +77,7 @@ void seg7_display(int number) {
 	for(int i=4;i<11;i++){
 		am335x_gpio_change_state(gpio_init[i].module,gpio_init[i].pin_nr, display[rightdig][i-4]);
 	}
-	if (neg) {
-		am335x_gpio_change_state(DIG_GPIO, 5, true);
-	} else {
-		am335x_gpio_change_state(DIG_GPIO, 5, false);
-	}
+	if (neg) am335x_gpio_change_state(DIG_GPIO, 5, true);
 	for(int i=100;i>0;i--);			//attendre
 	seg7_off();
 	if(number>=10){
