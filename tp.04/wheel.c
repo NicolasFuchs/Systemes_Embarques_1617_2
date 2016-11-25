@@ -32,25 +32,25 @@ void wheel_init(){
 }
 
 enum wheel_states wheel_get_state(){
-	enum wheel_states state;
+	enum wheel_states state = NONE;
 
 	//lire CHA
 	//lire CHB
 	bool cha = am335x_gpio_get_state(CHA_GPIO,CHA_PIN);
 	bool chb = am335x_gpio_get_state(CHB_GPIO,CHB_PIN);
-	bool sw = am335x_gpio_get_state(CHA_GPIO,SW_PIN);
+	bool sw = am335x_gpio_get_state(SW_GPIO,SW_PIN);
 
 	if(cha!=a_prev){
-		if(prev_state==NONE) state=INCR;
+		if(prev_state==NONE) prev_state=INCR;
 	}
 	if(chb!=b_prev){
-		if(prev_state==NONE) state=DECR;
+		if(prev_state==NONE) prev_state=DECR;
 	}
 	if(cha==chb && prev_state!=NONE){
-		state=NONE;
+		state=prev_state;
 		a_prev=cha;
 		b_prev=chb;
-		prev_state=state;
+		prev_state=NONE;
 	}
 
 	if(!sw){
