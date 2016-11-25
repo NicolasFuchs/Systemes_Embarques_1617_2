@@ -41,13 +41,19 @@ bool display[10][7] = {								//indice = numéro affiché
 		{false,true,true,false,false,false,false},	//1
 		{true,true,false,true,true,false,true},		//2
 		{true,true,true,true,false,false,true},		//3
-		{false,true,true,false,false,false,true},	//4
-		{true,false,true,true,false,true,false},	//5
+		{false,true,true,false,false,true,true},	//4
+		{true,false,true,true,false,true,true},		//5
 		{true,false,true,true,true,true,true},		//6
 		{true,true,true,false,false,false,false},	//7
 		{true,true,true,true,true,true,true},		//8
-		{true,true,true,true,false,false,true}		//9
+		{true,true,true,true,false,true,true}		//9
 };
+void seg7_off() {
+	int t = (sizeof gpio_init)/(sizeof(gpio_init[0]));
+	for (int i = 0; i < t; i++) {
+		am335x_gpio_setup_pin_out(gpio_init[i].module, gpio_init[i].pin_nr, false);
+	}
+}
 
 void seg7_init() {
 	am335x_gpio_init(SEG_GPIO);
@@ -59,25 +65,34 @@ void seg7_init() {
 };
 
 void seg7_display(int number) {
-	bool neg = (number < 0)?true:false;
-	if (number < 0) number = -number;
+	bool neg = false;
+	if(number<0){
+		neg=true;
+		number = -number;
+	}
 	int leftdig = number/10;
 	int rightdig = number%10;
+	seg7_off();
 	am335x_gpio_setup_pin_out(DIG_GPIO, 3, true);	//DIG2
 	for(int i=4;i<11;i++){
 		am335x_gpio_change_state(gpio_init[i].module,gpio_init[i].pin_nr, display[rightdig][i-4]);
-	}
-	if(number>=10){
-		am335x_gpio_setup_pin_out(DIG_GPIO, 2, true);	//DIG1
-		for(int i=4;i<11;i++){
-			am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin_nr, display[leftdig][i-4]);
-		}
 	}
 	if (neg) {
 		am335x_gpio_change_state(DIG_GPIO, 5, true);
 	} else {
 		am335x_gpio_change_state(DIG_GPIO, 5, false);
 	}
+	for(int i=100;i>0;i--);			//attendre
+	seg7_off();
+	if(number>=10){
+		am335x_gpio_setup_pin_out(DIG_GPIO, 2, true);	//DIG1
+		for(int i=4;i<11;i++){
+			am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin_nr, display[leftdig][i-4]);
+		}
+	}
+
 
 
 }
+
+

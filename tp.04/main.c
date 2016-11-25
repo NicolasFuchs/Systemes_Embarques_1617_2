@@ -57,7 +57,7 @@ int main(){
 			if(count>-99) count--;
 			break;
 		case RESET:
-			printf("reset");
+			printf("reset\n");
 			count=0;
 			break;
 		case NONE:
