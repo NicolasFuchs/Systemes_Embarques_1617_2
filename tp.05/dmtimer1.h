@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SEG7_H
-#define SEG7_H
+#ifndef DMTIMER1_H
+#define DMTIMER1_H
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -16,27 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:  HEIA-FR / Embedded Systems 1 Laboratory
+ * Project:	HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract: Introduction the C programming language
+ * Abstract:	Introduction to device driver development in C
  *
- * Purpose:  Module for managing the 7 segments displays of the HEIA-FR extension
- *           card of the Beaglebone Black board
+ * Purpose:	 Implementation of a basic timer based on the AM335x DMTimer1 timer.
  *
- * Author: 	Jonathan Rial & Alan Sueur
- * Date: 	November 2016
+ * Author: 	Jonathan Rial, Alan Sueur
+ * Date: 	december 2016
  */
 
-/**
- * Méthode d'initialisation de l'affichage 7 segments
- */
-void seg7_init();
-
-/**
- * Méthode pour afficher une valeur sur l'arffichage 7 segments
- *
- * @param chiffre à afficher
- */
-void seg7_display_value(int32_t counter);
+// Code here
 
 #endif

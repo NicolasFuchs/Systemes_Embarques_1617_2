@@ -18,31 +18,42 @@
  * Abstract:	Introduction to device driver development in C
  *
  * Purpose:	Demo program implementing a basic timer and countdown
- *		application, which is based on the AM335x DMTimer1 timer.
+ *		    application, which is based on the AM335x DMTimer1 timer.
  *
- * Author: 	<author's>
- * Date: 	<date>
+ * Author: 	Jonathan Rial, Alan Sueur
+ * Date: 	december 2016
  */
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "buttons.h"
+
 // ----------------------------------------------------------------------------
 // main program...
 // ----------------------------------------------------------------------------
 
-int main()
-{
+int main() {
 	// print program banner
-	printf ("HEIA-FR - Embedded Systems 1 Laboratory\n"
-		"An introduction to device driver development in C\n"
-		"--> AM335x DMTimer1 device driver\n");
+	printf("HEIA-FR - Embedded Systems 1 Laboratory\n"
+			"An introduction to device driver development in C\n"
+			"--> AM335x DMTimer1 device driver\n");
 
 	// initialization...
+	buttons_init();
 
 	// application...
-	while(true) {
+	while (true) {
+		if (get_button_state(BUTTON1)) {
+			printf("Button 1 pressed\n");
+		}
+		if (get_button_state(BUTTON2)) {
+			printf("Button 2 pressed\n");
+		}
+		if (get_button_state(BUTTON3)) {
+			printf("Button 3 pressed\n");
+		}
 	}
 
 	return 0;
