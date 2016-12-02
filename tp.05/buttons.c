@@ -31,17 +31,12 @@
 #include "buttons.h"
 
 // Module GPIO pour les boutons
-#define BUTTON_GPIO	1
+#define BUTTON_GPIO	AM335X_GPIO1
 
 // Numéro des pins pour les boutons
 #define PIN_BUTTON1	15
 #define PIN_BUTTON2	16
 #define PIN_BUTTON3	17
-
-// Bitset pour les boutons
-#define BUTTON1	(1<<PIN_BUTTON1)
-#define BUTTON2	(1<<PIN_BUTTON2)
-#define BUTTON3	(1<<PIN_BUTTON3)
 
 // Macro pour calculer la taille d'un tableau
 #define ARRAY_OF(x) (sizeof(x) / sizeof(x[0]))
@@ -62,12 +57,12 @@ static const struct gpio_init gpio_init[] = {
 
 // Lookup table pour le mapping des buttons
 static const uint32_t buttons[] = {
-	PIN_BUTTON1, PIN_BUTTON2, PIN_BUTTON3,
+		PIN_BUTTON1, PIN_BUTTON2, PIN_BUTTON3,
 };
 
 void buttons_init() {
 	// Initialisation du module GPIO
-	am335x_gpio_init(AM335X_GPIO1);
+	am335x_gpio_init(BUTTON_GPIO);
 
 	for (uint32_t i = 0; i < ARRAY_OF(gpio_init); ++i) {
 		am335x_gpio_setup_pin(gpio_init[i].module, gpio_init[i].pin,

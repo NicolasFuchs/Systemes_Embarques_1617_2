@@ -27,7 +27,6 @@
  * Date: 	december 2016
  */
 
-#include <stdint.h>
 #include <stdbool.h>
 
 enum buttons_set {

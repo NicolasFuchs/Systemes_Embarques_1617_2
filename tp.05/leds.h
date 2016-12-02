@@ -27,6 +27,14 @@
  * Date: 	december 2016
  */
 
-// Code here
+#include <stdbool.h>
+
+enum leds_set {
+	LED1, LED2, LED3
+};
+
+void leds_init();
+
+void change_led_state(enum leds_set led, bool state);
 
 #endif

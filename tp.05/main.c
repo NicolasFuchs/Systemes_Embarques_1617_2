@@ -29,6 +29,7 @@
 #include <stdint.h>
 
 #include "buttons.h"
+#include "leds.h"
 
 // ----------------------------------------------------------------------------
 // main program...
@@ -42,20 +43,29 @@ int main() {
 
 	// initialization...
 	buttons_init();
+	leds_init();
 
 	// application...
 	while (true) {
 		if (get_button_state(BUTTON1)) {
 			printf("Button 1 pressed\n");
+			change_led_state(LED1, true);
+			change_led_state(LED2, false);
+			change_led_state(LED3, false);
 		}
 		if (get_button_state(BUTTON2)) {
 			printf("Button 2 pressed\n");
+			change_led_state(LED1, false);
+			change_led_state(LED2, true);
+			change_led_state(LED3, false);
 		}
 		if (get_button_state(BUTTON3)) {
 			printf("Button 3 pressed\n");
+			change_led_state(LED1, false);
+			change_led_state(LED2, false);
+			change_led_state(LED3, true);
 		}
 	}
 
 	return 0;
 }
-
