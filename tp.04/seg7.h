@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WHEEL_H
-#define WHEEL_H
+#ifndef SEG7_H
+#define SEH7_H
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -20,30 +20,23 @@
  *
  * Abstract: Introduction the C programming language
  *
- * Purpose:  Module for managing the wheel of the HEIA-FR extension card of the
- *           Beaglebone Black board
+ * Purpose:  Module for managing the 7 segments displays of the HEIA-FR extension
+ *           card of the Beaglebone Black board
  *
  * Author: 	Jonathan Rial & Alan Sueur
  * Date: 	November 2016
  */
 
 /**
- * Etats possibles de la roue
+ * Méthode d'initialisation de l'affichage 7 segments
  */
-enum wheel_state {
-	WHEEL_NONE, WHEEL_INCR, WHEEL_DECR, WHEEL_RESET
-};
+void seg7_init();
 
 /**
- * Méthode d'initialisation de la roue
- */
-void wheel_init();
-
-/**
- * Méthode permettant de retouner l'état de la roue
+ * Méthode pour afficher une valeur sur l'arffichage 7 segments
  *
- * @return L'état de la roue
+ * @param chiffre à afficher
  */
-enum wheel_state wheel_get_state();
+void seg7_display_value(int32_t counter);
 
 #endif

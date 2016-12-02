@@ -29,6 +29,7 @@
 
 #include "wheel.h"
 
+// Numéro des pins GPIO
 #define SW_PIN    2
 #define SW_GPIO   0
 #define CHA_PIN   1
@@ -36,15 +37,21 @@
 #define CHB_PIN  29
 #define CHB_GPIO  1
 
+// Constantes
 static enum wheel_state transcient_state = WHEEL_NONE;
 static bool cha_previous_state = false;
 static bool chb_previous_state = false;
 
+/**
+ * Méthode d'initialisation de la roue
+ */
 void wheel_init() {
+	// Initialisation des modules GPIO
 	am335x_gpio_init(AM335X_GPIO0);
 	am335x_gpio_init(AM335X_GPIO1);
 	am335x_gpio_init(AM335X_GPIO2);
 
+	// Initialisation des pins GPIO
 	am335x_gpio_setup_pin(SW_GPIO, SW_PIN, AM335X_GPIO_PIN_IN,
 			AM335X_GPIO_PULL_NONE);
 	am335x_gpio_setup_pin(CHA_GPIO, CHA_PIN, AM335X_GPIO_PIN_IN,
@@ -52,10 +59,16 @@ void wheel_init() {
 	am335x_gpio_setup_pin(CHB_GPIO, CHB_PIN, AM335X_GPIO_PIN_IN,
 			AM335X_GPIO_PULL_NONE);
 
+	// Sauvegarde de l'état des pins CHA et CHB
 	cha_previous_state = am335x_gpio_get_state(CHA_GPIO, CHA_PIN);
 	chb_previous_state = am335x_gpio_get_state(CHB_GPIO, CHB_PIN);
 }
 
+/**
+ * Méthode permettant de retouner l'état de la roue
+ *
+ * @return L'état de la roue
+ */
 enum wheel_state wheel_get_state() {
 	enum wheel_state state = WHEEL_NONE;
 
