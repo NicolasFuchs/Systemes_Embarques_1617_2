@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "dmtimer.h"
+#include "dmtimer1.h"
 #include <am335x_clock.h>
 
 //accès aux registres pour le timer:
@@ -47,7 +47,6 @@ struct dmtimer1_regs{
 };
 
 static volatile struct dmtimer1_regs* timer1 = (struct dmtimer1_regs*)0x443e31000;
-static volatile uint32_t ns_counter;
 
 void timer_init(){
 	am335x_clock_enable_timer_module(AM335X_CLOCK_TIMER1);
@@ -55,29 +54,12 @@ void timer_init(){
 	while((timer1->tistat & TISTAT_RESETDONE)==0);
 	timer1->ttgr = 0;
 	timer1->tldr = 0;
-	timer1->tclr = TCLR_AR | TCLR_ST;
 	timer1->tcrr = 0;
-	ns_counter=0;
-}
-
-void timer_reset(){
-	timer1->tiocp_cfg = TIOCP_CFG_SOFTRESET;
-	while((timer1->tistat & TISTAT_RESETDONE)==0);
-	timer1->ttgr = 0;
-	timer1->tldr = 0;
 	timer1->tclr = TCLR_AR | TCLR_ST;
-	timer1->tcrr = 0;
-	ns_counter=0;
-}
-
-static void timer_get_tcrr(){
-	uint32_t timer_val = timer1->tcrr;
-	ns_counter+=abs((int)timer_val-(int)ns_counter);
 }
 
 uint32_t timer_getVal(){
-	timer_get_tcrr();
-	return (uint32_t)(((double)ns_counter/timer_get_frequency())*1000);
+	return timer1->tcrr;
 }
 
 uint32_t timer_get_frequency(){
