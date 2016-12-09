@@ -38,6 +38,17 @@ uint64_t counter;
 // ----------------------------------------------------------------------------
 // main program...
 // ----------------------------------------------------------------------------
+void enter_def_state();
+void enter_chrono_mode();
+void chrono_start();
+int chrono_stop();
+void print_nb_in_tic(int cnt);
+void enter_countdown_mode();
+void countdown_start();
+int countdown_stop();
+void print_nb_in_ds(int cnt);
+void reset();
+void init();
 
 void enter_def_state(){
 	while(true) {
