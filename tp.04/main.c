@@ -22,8 +22,8 @@
  * 		7-segment display of the HEIA-FR extension card of the 
  *		Beaglebone Black board 
  *
- * Author: 	<Nicolas Fuchs>
- * Date: 	<date>
+ * Author: 	Charlotte Junod and Nicolas Fuchs
+ * Date: 	25.11.2016
  */
 
 #include <stdio.h>

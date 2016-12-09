@@ -27,6 +27,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+//#include "seg7.h"
+//#include "wheel.h"
 
 // ----------------------------------------------------------------------------
 // main program...
