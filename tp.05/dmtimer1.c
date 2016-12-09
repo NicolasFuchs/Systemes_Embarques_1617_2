@@ -30,7 +30,7 @@ struct dmtimer1_regs{
 	uint32_t twer;		//20 - 23
 	uint32_t tclr;		//24 - 27
 	uint32_t tcrr;		//28 - 2b
-	uint32_t tldr;		//2c - 2ftimer1->tcrr;
+	uint32_t tldr;		//2c - 2f			timer1->tcrr;
 	uint32_t ttgr;		//30 - 33
 	uint32_t twps;		//34 - 37
 	uint32_t tmar;		//38 - 3b

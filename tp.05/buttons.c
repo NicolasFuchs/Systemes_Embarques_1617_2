@@ -3,28 +3,26 @@
  *      Author: lmi
  */
 
+#include "am335x_gpio.h"
 #include <stdbool.h>
 #include <stdint.h>
 
-//variables
-enum button_states {PUSHED,FREE};
-
-
+#define GPIO AM335X_GPIO1
+#define BTN1 15
+#define BTN2 16
+#define BTN3 17
+//1,2,3 -> 15,16,17
 
 //fonctions
 void buttons_init(){
-
+	am335x_gpio_init(GPIO);
+	am335x_gpio_setup_pin_in(GPIO,BTN1,AM335X_GPIO_PULL_NONE,false);
+	am335x_gpio_setup_pin_in(GPIO,BTN2,AM335X_GPIO_PULL_NONE,false);
+	am335x_gpio_setup_pin_in(GPIO,BTN3,AM335X_GPIO_PULL_NONE,false);
 }
 
-enum button_states s1_getstate(){
-
+bool is_button_pushed(int btnNb){
+	return am335x_gpio_get_state(GPIO,btnNb+14);
 }
 
-enum button_states s2_getstate(){
-
-}
-
-enum button_states s3_getstate(){		//->reset
-
-}
 
