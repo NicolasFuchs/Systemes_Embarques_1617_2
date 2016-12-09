@@ -17,8 +17,6 @@
 #define TCLR_AR (1 << 1)
 #define TCLR_ST 1
 
-#define abs(x) x<0?-x:x
-
 //déclaration:
 struct dmtimer1_regs{
 	uint32_t tidr;		//00 - 03

@@ -22,7 +22,7 @@ void buttons_init(){
 }
 
 bool is_button_pushed(int btnNb){
-	return am335x_gpio_get_state(GPIO,btnNb+14);
+	return !am335x_gpio_get_state(GPIO,btnNb+14);
 }
 
 
