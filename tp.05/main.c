@@ -27,12 +27,117 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
-//#include "seg7.h"
-//#include "wheel.h"
+#include "seg7.h"
+#include "wheel.h"
+#include "buttons.h"
+#include "leds.h"
+#include "dmtimer1.h"
+
+uint64_t counter;
 
 // ----------------------------------------------------------------------------
 // main program...
 // ----------------------------------------------------------------------------
+
+void enter_def_state(){
+	while(true) {
+		if(is_button_pushed(1)) 		enter_chrono_mode();
+		else if(is_button_pushed(2)) 	enter_countdown_mode();
+	}
+}
+
+void enter_chrono_mode(){
+	counter=0;
+	chrono_start();
+}
+
+void chrono_start(){
+	counter=0;
+	int depVal=timer_getVal();
+	int intervalle=0;
+	while(true){
+		intervalle=timer_getVal()-depVal;
+		counter=counter+intervalle;
+		depVal+=intervalle;
+		print_nb_in_tic(counter);
+		if(wheel_get_state()==RESET) depVal=chrono_stop();
+		if(is_button_pushed(3)) reset();
+	}
+}
+
+int chrono_stop(){
+	while(true){
+		if(wheel_get_state()==RESET){
+			return timer_getVal();
+		}
+		if(is_button_pushed(3)) reset();
+	}
+}
+
+void print_nb_in_tic(int cnt){
+	cnt=(int)((double)cnt/(double)timer_get_frequency())*10; //cnt en ds
+	if(cnt>=10) cnt/=10;
+	if(cnt>99) cnt=99;
+	seg7_display(cnt);
+}
+
+void enter_countdown_mode(){
+	counter=0;
+	while(true){
+		if(wheel_get_state()==INCR && counter<99) counter++;
+		if(wheel_get_state()==DECR && counter>0) counter--;
+		seg7_display(counter);
+		if(wheel_get_state()==RESET){
+			counter*=10;
+			countdown_start();
+		}
+		if(is_button_pushed(3)) reset();
+	}
+}
+
+void countdown_start(){
+	int depVal=timer_getVal();
+	int intervalle=0;
+	while(true){
+		intervalle=timer_getVal()-depVal;
+		depVal+=intervalle;
+		if(counter>0)counter=counter-(intervalle*timer_get_frequency())*10;
+		print_nb_in_ds(counter);
+		if(wheel_get_state()==RESET) depVal=countdown_stop();
+		if(is_button_pushed(3)) reset();
+	}
+}
+
+int countdown_stop(){
+	while(true){
+		if(wheel_get_state()==RESET){
+			return timer_getVal();
+		}
+		if(is_button_pushed(3)) reset();
+	}
+}
+
+void print_nb_in_ds(int cnt){
+	if(cnt>=10) cnt/=10;
+	if(cnt>99) cnt=99;
+	seg7_display(cnt);
+}
+
+void reset(){
+	counter=0;
+	init();
+	enter_def_state();
+}
+
+void init(){
+	seg7_init();
+	buttons_init();
+	wheel_init();
+	leds_init();
+	timer_init();
+	counter=0;
+}
+
 
 int main()
 {
@@ -44,9 +149,8 @@ int main()
 	// initialization...
 
 	// application...
-	while(true) {
-	}
-
+	init();
+	enter_def_state();
 	return 0;
 }
 
