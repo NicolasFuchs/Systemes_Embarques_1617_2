@@ -44,7 +44,7 @@ struct dmtimer1_regs{
 	uint32_t towr;		//58 - 5b
 };
 
-static volatile struct dmtimer1_regs* timer1 = (struct dmtimer1_regs*)0x443e31000;
+static volatile struct dmtimer1_regs* timer1 = (struct dmtimer1_regs*)0x44e31000;
 
 void timer_init(){
 	am335x_clock_enable_timer_module(AM335X_CLOCK_TIMER1);
