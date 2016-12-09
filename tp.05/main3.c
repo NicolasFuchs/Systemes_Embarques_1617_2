@@ -23,7 +23,7 @@
  * Author: 	<author's>
  * Date: 	<date>
  */
-
+/*
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -39,6 +39,7 @@ int cmode;
 // ----------------------------------------------------------------------------
 // main program...
 // ----------------------------------------------------------------------------
+void enter_def_state();
 void enter_chrono_mode();
 void chrono_start();
 int chrono_stop();
@@ -49,6 +50,16 @@ int countdown_stop();
 void print_nb_in_ds(int cnt);
 void reset();
 void init();
+
+void enter_def_state(){
+	leds_all_on();
+	cmode=0;
+	seg7_display(0);
+	while(true) {
+		if(is_button_pushed(1)) 		enter_chrono_mode();
+		else if(is_button_pushed(2)) 	enter_countdown_mode();
+	}
+}
 
 void enter_chrono_mode(){
 	cmode=10;
@@ -69,7 +80,7 @@ void chrono_start(){
 		depVal+=intervalle;
 		print_nb_in_tic(counter);
 		if(wheel_get_state()==RESET) depVal=chrono_stop();
-		if(is_button_pushed(3)|| depVal<0) return;
+		if(is_button_pushed(3)) reset();
 	}
 }
 
@@ -80,7 +91,7 @@ int chrono_stop(){
 		if(wheel_get_state()==RESET){
 			return timer_getVal();
 		}
-		if(is_button_pushed(3)) return -1;
+		if(is_button_pushed(3)) reset();
 	}
 }
 
@@ -92,26 +103,23 @@ void print_nb_in_tic(int cnt){
 }
 
 void enter_countdown_mode(){
-	printf("enterc countdown mode\n");
 	cmode=20;
 	leds_all_off();
 	leds_turn_on(2);
 	counter=0;
 	while(true){
-		enum wheel_states state = wheel_get_state();
-		if(state==INCR && counter<99) counter++;
-		else if(state==DECR && counter>0) counter--;
-		else if(state==RESET){
+		if(wheel_get_state()==INCR && counter<99) counter++;
+		if(wheel_get_state()==DECR && counter>0) counter--;
+		seg7_display(counter);
+		if(wheel_get_state()==RESET){
 			counter*=10;
 			countdown_start();
 		}
-		if(is_button_pushed(3)) return;
-		seg7_display(counter);
+		if(is_button_pushed(3)) reset();
 	}
 }
 
 void countdown_start(){
-	printf("countdown start\n");
 	cmode=21;
 	int depVal=timer_getVal();
 	int intervalle=0;
@@ -120,39 +128,36 @@ void countdown_start(){
 			depVal=countdown_stop();
 		}else{
 			intervalle=timer_getVal()-depVal;
-			if(counter>0)counter=counter-(intervalle/timer_get_frequency())*10;
 			depVal+=intervalle;
-			//COUNTER DOES NOT MOVE
+			if(counter>0)counter=counter-(intervalle*timer_get_frequency())*10;
 			print_nb_in_ds(counter);
-			printf("%d",(int)counter);
 		}
-		if(is_button_pushed(3) || depVal<0) return;
+		if(is_button_pushed(3)) reset();
 	}
 }
 
 int countdown_stop(){
-	printf("countdown stop\n");
 	cmode=22;
 	while(true){
 		print_nb_in_ds(counter);
 		if(wheel_get_state()==RESET){
 			return timer_getVal();
 		}
-		if(is_button_pushed(3)) return -1;
+		if(is_button_pushed(3)) reset();
 	}
 }
 
 void print_nb_in_ds(int cnt){
 	if(cnt>=10) cnt/=10;
 	if(cnt>99) cnt=99;
-	printf("count: %d\n",cnt);
 	seg7_display(cnt);
 }
 
 void reset(){
-	printf("Reset!\n");
 	cmode=100;
+	counter=0;
 	init();
+	enter_def_state();
 }
 
 void init(){
@@ -176,20 +181,8 @@ int main()
 
 	// application...
 	init();
-	while(true){
-		printf("Default mode\n");
-		leds_all_on();
-		cmode=0;
-		seg7_display(0);
-		if(is_button_pushed(1)){
-			enter_chrono_mode();
-			chrono_start();
-			reset();
-		}else if(is_button_pushed(2)){
-			enter_countdown_mode();
-			countdown_start();
-			reset();
-		}
-	}
+	enter_def_state();
 	return 0;
 }
+
+*/

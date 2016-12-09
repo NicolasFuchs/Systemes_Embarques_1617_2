@@ -47,9 +47,9 @@ void wheel_init(){
 	am335x_gpio_init(SW_GPIO);
 	am335x_gpio_init(CHB_GPIO);
 	am335x_gpio_init(CHA_GPIO);
-	am335x_gpio_setup_pin(CHA_GPIO,CHA_PIN,AM335X_GPIO_PIN_IN,AM335X_GPIO_PULL_NONE);
-	am335x_gpio_setup_pin(CHB_GPIO,CHB_PIN,AM335X_GPIO_PIN_IN,AM335X_GPIO_PULL_NONE);
-	am335x_gpio_setup_pin(SW_GPIO,SW_PIN,AM335X_GPIO_PIN_IN,AM335X_GPIO_PULL_NONE);
+	am335x_gpio_setup_pin_in(CHA_GPIO,CHA_PIN,AM335X_GPIO_PULL_NONE,true);
+	am335x_gpio_setup_pin_in(CHB_GPIO,CHB_PIN,AM335X_GPIO_PULL_NONE,true);
+	am335x_gpio_setup_pin_in(SW_GPIO,SW_PIN,AM335X_GPIO_PULL_NONE,true);
 }
 
 enum wheel_states wheel_get_state(){
