@@ -69,7 +69,7 @@ void chrono_start(){
 		depVal+=intervalle;
 		print_nb_in_tic(counter);
 		if(wheel_get_state()==RESET) depVal=chrono_stop();
-		if(is_button_pushed(3)|| depVal<0) return;
+		if(is_button_pushed(3)||depVal<0) return;
 	}
 }
 
@@ -92,7 +92,7 @@ void print_nb_in_tic(int cnt){
 }
 
 void enter_countdown_mode(){
-	printf("enterc countdown mode\n");
+	printf("enter countdown mode\n");
 	cmode=20;
 	leds_all_off();
 	leds_turn_on(2);
@@ -102,7 +102,7 @@ void enter_countdown_mode(){
 		if(state==INCR && counter<99) counter++;
 		else if(state==DECR && counter>0) counter--;
 		else if(state==RESET){
-			counter*=10;
+			counter*=10;		// ???
 			countdown_start();
 		}
 		if(is_button_pushed(3)) return;
@@ -120,11 +120,11 @@ void countdown_start(){
 			depVal=countdown_stop();
 		}else{
 			intervalle=timer_getVal()-depVal;
-			if(counter>0)counter=counter-(intervalle/timer_get_frequency())*10;
+			if(counter>0) counter=counter-(intervalle/timer_get_frequency())*10;
 			depVal+=intervalle;
 			//COUNTER DOES NOT MOVE
 			print_nb_in_ds(counter);
-			printf("%d",(int)counter);
+			printf("test %d",(int)counter);
 		}
 		if(is_button_pushed(3) || depVal<0) return;
 	}
