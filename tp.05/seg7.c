@@ -25,6 +25,7 @@
  * Author: 	Charlotte Junod and Nicolas Fuchs
  * Date: 	25.11.2016
  */
+
 #include "am335x_gpio.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -69,6 +70,7 @@ bool display[10][7] = {								//indice = numéro affiché
 		{true,true,true,true,true,true,true},		//8
 		{true,true,true,true,false,true,true}		//9
 };
+
 void seg7_off() {
 	int t = (sizeof gpio_init)/(sizeof(gpio_init[0]));
 	for (int i = 0; i < t; i++) {

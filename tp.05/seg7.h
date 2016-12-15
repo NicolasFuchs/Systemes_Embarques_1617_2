@@ -1,3 +1,8 @@
+
+#pragma once
+#ifndef SEG7_H_
+#define SEG7_H_
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -25,9 +30,6 @@
  * Author: 	Charlotte Junod and Nicolas Fuchs
  * Date: 	25.11.2016
  */
-
-#ifndef SEG7_H_
-#define SEG7_H_
 
 /*
  * seg7_init:
