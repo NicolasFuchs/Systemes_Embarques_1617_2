@@ -20,8 +20,8 @@
  * Purpose:	Demo program implementing a basic timer and countdown
  *		application, which is based on the AM335x DMTimer1 timer.
  *
- * Author: 	<author's>
- * Date: 	<date>
+ * Author: 	<Charlotte Junod and Nicolas Fuchs>
+ * Date: 	<25.11.2016>
  */
 
 #include <stdio.h>
@@ -38,6 +38,7 @@ uint64_t counter;
 // ----------------------------------------------------------------------------
 // main program...
 // ----------------------------------------------------------------------------
+
 void enter_chrono_mode();
 void chrono_start();
 int chrono_stop();
@@ -51,16 +52,16 @@ void init();
 void enter_chrono_mode(){
 	leds_all_off();
 	leds_turn_on(1);
-	counter=0;
+	counter = 0;
 	chrono_start();
 }
 
 void chrono_start(){
 	printf("chrono start\n");
-	while(wheel_get_state()==RESET);
-	counter=0;
-	int depVal=timer_getVal();
-	int intervalle=0;
+	while(wheel_get_state() == RESET);
+	counter = 0;
+	int depVal = timer_getVal();
+	int intervalle = 0;
 	while(true){
 		enum wheel_states state = wheel_get_state();
 		if(is_button_pushed(3)|| depVal<0) return;

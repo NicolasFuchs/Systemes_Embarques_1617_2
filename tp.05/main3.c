@@ -20,8 +20,8 @@
  * Purpose:	Demo program implementing a basic timer and countdown
  *		application, which is based on the AM335x DMTimer1 timer.
  *
- * Author: 	<author's>
- * Date: 	<date>
+ * Author: 	<Charlotte Junod and Nicolas Fuchs>
+ * Date: 	<25.11.2016>
  */
 /*
 #include <stdio.h>
