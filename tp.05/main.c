@@ -20,10 +20,22 @@
  * Purpose:	Demo program implementing a basic timer and countdown
  *		application, which is based on the AM335x DMTimer1 timer.
  *
+<<<<<<< HEAD
  * Author: 	<Charlotte Junod and Nicolas Fuchs>
  * Date: 	<25.11.2016>
+=======
+ * Author: 	Charlotte Junod et Nicolas Fuchs
+ * Date: 	15.12.16
+>>>>>>> 95cf8c143125f3f580acc62ca07fdc531666cdb2
  */
 
+
+
+/*
+ * printf's en commentaires -> pour débugger avec minicom
+ */
+
+//--------------------------- includes ---------------------------
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -33,11 +45,10 @@
 #include "leds.h"
 #include "dmtimer1.h"
 
+//----------------------- module variables -----------------------
 uint64_t counter;
 
-// ----------------------------------------------------------------------------
-// main program...
-// ----------------------------------------------------------------------------
+//-------------------------- prototypes --------------------------
 
 void enter_chrono_mode();
 void chrono_start();
@@ -49,6 +60,7 @@ int countdown_stop();
 void reset();
 void init();
 
+//--------------------------- méthodes ---------------------------
 void enter_chrono_mode(){
 	leds_all_off();
 	leds_turn_on(1);
@@ -57,11 +69,11 @@ void enter_chrono_mode(){
 }
 
 void chrono_start(){
-	printf("chrono start\n");
-	while(wheel_get_state() == RESET);
-	counter = 0;
-	int depVal = timer_getVal();
-	int intervalle = 0;
+	//printf("chrono start\n");
+	while(wheel_get_state()==RESET);
+	counter=0;
+	int depVal=timer_getVal();
+	int intervalle=0;
 	while(true){
 		enum wheel_states state = wheel_get_state();
 		if(is_button_pushed(3)|| depVal<0) return;
@@ -80,7 +92,7 @@ void chrono_start(){
 }
 
 int chrono_stop(){
-	printf("chrono stop\n");
+	//printf("chrono stop\n");
 	while(wheel_get_state()==RESET);
 	while(true){
 		print_nb_in_tic(counter);
@@ -94,11 +106,9 @@ int chrono_stop(){
 void print_nb_in_tic(int cnt){
 	double dcnt=((double)cnt/(double)timer_get_frequency())*10;
 	cnt=(int)dcnt; //cnt en ds
-	//printf("print: %d %f",cnt,dcnt);
 	if(cnt<0)cnt=0;
 	if(cnt>=10) cnt/=10;
 	if(cnt>99) cnt=99;
-	//printf("%d\n",cnt);
 	seg7_display(cnt);
 }
 
@@ -112,10 +122,10 @@ void enter_countdown_mode(){
 		if(state==INCR && counter<99) counter++;
 		else if(state==DECR && counter>0) counter--;
 		else if(state==RESET){
-			printf("counter: %d",(int)counter);
-			//  /!\ OVERFLOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//printf("counter: %d",(int)counter);
+			//ici i semble qu'on ait un overflow si counter approche de 99
 			counter*=timer_get_frequency();
-			printf("counter: %d",(int)counter);
+			//printf("counter: %d",(int)counter);
 			countdown_start();
 		}
 		if(is_button_pushed(3)) return;
@@ -124,7 +134,7 @@ void enter_countdown_mode(){
 }
 
 void countdown_start(){
-	printf("countdown start\n");
+	//printf("countdown start\n");
 	while(wheel_get_state()==RESET);
 	int depVal=timer_getVal();
 	int intervalle=0;
@@ -133,7 +143,7 @@ void countdown_start(){
 		if(state==RESET){
 			depVal=countdown_stop();
 			while(wheel_get_state()==RESET);
-			printf("chrono resume\n");
+			//printf("chrono resume\n");
 		}
 		intervalle=timer_getVal()-depVal;
 		if(counter>0)counter-=intervalle;
@@ -144,7 +154,7 @@ void countdown_start(){
 }
 
 int countdown_stop(){
-	printf("countdown stop\n");
+	//printf("countdown stop\n");
 	while(wheel_get_state()==RESET);
 	while(true){
 		enum wheel_states state = wheel_get_state();
@@ -157,7 +167,7 @@ int countdown_stop(){
 }
 
 void reset(){
-	printf("Reset!\n");
+	//printf("Reset!\n");
 	init();
 }
 
@@ -170,7 +180,7 @@ void init(){
 	counter=0;
 }
 
-
+//---------------------------  main ----------------------------
 int main()
 {
 	// print program banner
@@ -187,16 +197,18 @@ int main()
 	while(true){
 		leds_all_on();
 		seg7_display(-88);
+		//enter chrono mode
 		if(is_button_pushed(1)){
 			enter_chrono_mode();
 			chrono_start();
 			reset();
-			printf("Default mode\n");
+			//printf("Default mode\n");
+		//enter countdown mode
 		}else if(is_button_pushed(2)){
 			enter_countdown_mode();
 			countdown_start();
 			reset();
-			printf("Default mode\n");
+			//printf("Default mode\n");
 		}
 	}
 	return 0;
