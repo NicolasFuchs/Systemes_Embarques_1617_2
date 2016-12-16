@@ -26,6 +26,14 @@
  * Date: 	december 2016
  */
 
-// Code here
+void dmtimer1_init();
+
+uint32_t dmtimer1_get_hours();
+
+uint32_t dmtimer1_get_minutes();
+
+uint32_t dmtimer1_get_seconds();
+
+uint32_t dmtimer1_get_milliseconds();
 
 #endif

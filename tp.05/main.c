@@ -30,6 +30,7 @@
 
 #include "buttons.h"
 #include "leds.h"
+#include "dmtimer1.h"
 
 // ----------------------------------------------------------------------------
 // main program...
@@ -53,7 +54,6 @@ int main() {
 			change_led_state(LED1, true);
 			change_led_state(LED2, false);
 			change_led_state(LED3, false);
-			start_counter();
 		}
 		else if (get_button_state(BUTTON2)) {
 			printf("Button 2 pressed\n");

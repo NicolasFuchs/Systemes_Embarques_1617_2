@@ -23,6 +23,7 @@
  * Date: 	december 2016
  */
 
+#include <stdbool.h>
 #include <am335x_gpio.h>
 #include <am335x_clock.h>
 
@@ -42,10 +43,12 @@ enum am335x_clock_gpio_modules {
     AM335X_CLOCK_GPIO3,
 };
  */
-#include <stdbool.h>
-#include <am335x_gpio.h>
-#include "dmtimer1.h"
-#include <am335x_clock.h>
+
+#define FREQUENCY 24000000
+#define HOUR (FREQUENCY / 3600)
+#define MINUTE (FREQUENCY / 60)
+#define SECOND FREQUENCY
+#define MILLISECOND (FREQUENCY * 100)
 
 #define TISTAT_RESETDONE (1 << 0)
 #define TCLR_AR (1 << 1)
@@ -78,11 +81,15 @@ struct dmtimer1_regs{
 
 static volatile struct dmtimer1_regs* timer1 = (struct dmtimer1_regs*)0x44e31000;
 
-
-uint32_t dmtimer1_get_counter(){
-    uint32_t tccr = timer1->tcrr;
-    return tccr;
-}
+//===========================
+// Time variables
+//===========================
+uint32_t last_time = 0;
+uint32_t hours = 0;
+uint32_t minutes = 0;
+uint32_t seconds = 0;
+uint32_t milliseconds = 0;
+uint32_t smaller_than_milliseconds = 0;
 
 void dmtimer1_init(){
 
@@ -97,9 +104,51 @@ void dmtimer1_init(){
     timer1->tclr = TCLR_AR | TCLR_ST;
     timer1->tcrr = 0;
 
+    last_time = timer1 -> tcrr;
+
     is_initialized = true;
 }
 
-uint32_t dmtimer1_get_frequency(){
-    return 24000000;
+void update_time() {
+	uint32_t tcrr = timer1 -> tcrr;
+	uint32_t delta = tcrr - last_time;
+	last_time = tcrr;
+	smaller_than_milliseconds += delta;
+
+	// Update milliseconds
+	milliseconds += smaller_than_milliseconds / 24000;
+	smaller_than_milliseconds = smaller_than_milliseconds % 24000;
+
+	// Update seconds
+	seconds += milliseconds / 1000;
+	milliseconds = milliseconds % 1000;
+
+	// Update minutes
+	minutes += seconds / 60;
+	seconds = seconds % 60;
+
+	// Update hours
+	hours += minutes / 60;
+	minutes = minutes % 60;
 }
+
+uint32_t dmtimer1_get_hours() {
+	update_time();
+	return hours;
+}
+
+uint32_t dmtimer1_get_minutes() {
+	update_time();
+	return minutes;
+}
+
+uint32_t dmtimer1_get_seconds() {
+	update_time();
+	return seconds;
+}
+
+uint32_t dmtimer1_get_milliseconds() {
+	update_time();
+	return milliseconds;
+}
+
