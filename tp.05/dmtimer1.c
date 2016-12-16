@@ -42,11 +42,18 @@ enum am335x_clock_gpio_modules {
     AM335X_CLOCK_GPIO3,
 };
  */
+#include <stdbool.h>
+#include <am335x_gpio.h>
+#include "dmtimer1.h"
+#include <am335x_clock.h>
 
-struct timer
-{
+#define TISTAT_RESETDONE (1 << 0)
+#define TCLR_AR (1 << 1)
+#define TCLR_ST (1 << 0)
+#define TIOCP_CFG_SOFTRESET (1 << 1)
+
+struct dmtimer1_regs{
     uint32_t res1[3];
-
     uint32_t tidr;
     uint32_t tiocp_cfg;
     uint32_t tistat;
@@ -67,15 +74,32 @@ struct timer
     uint32_t tcvr;
     uint32_t tocr;
     uint32_t towr;
+};
+
+static volatile struct dmtimer1_regs* timer1 = (struct dmtimer1_regs*)0x44e31000;
+
+
+uint32_t dmtimer1_get_counter(){
+    uint32_t tccr = timer1->tcrr;
+    return tccr;
 }
 
-void dmtimer1_init()
-{
+void dmtimer1_init(){
+
+    static bool is_initialized = false;
+    if(is_initialized) return;
+
     am335x_clock_enable_timer_module(AM335X_CLOCK_TIMER1);
+    timer1->tiocp_cfg = TIOCP_CFG_SOFTRESET;
+    while((timer1->tistat & TISTAT_RESETDONE)==0);
+    timer1->ttgr = 0;
+    timer1->tldr = 0;
+    timer1->tclr = TCLR_AR | TCLR_ST;
+    timer1->tcrr = 0;
 
+    is_initialized = true;
 }
 
-void start_counter()
-{
-
+uint32_t dmtimer1_get_frequency(){
+    return 24000000;
 }
