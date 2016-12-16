@@ -70,9 +70,23 @@ void leds_init() {
 	}
 }
 
+void enable_led_exclusively(enum leds_set led) {
+	if (led > 2) {
+		return;
+	}
+	leds_reset();
+	am335x_gpio_change_state(BUTTON_GPIO, leds[led], true);
+}
+
 void change_led_state(enum leds_set led, bool state) {
 	if (led > 2) {
 		return;
 	}
 	am335x_gpio_change_state(BUTTON_GPIO, leds[led], state);
+}
+
+void leds_reset() {
+	for (uint32_t i = 0; i < ARRAY_OF(gpio_init); ++i) {
+		am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin, false);
+	}
 }

@@ -29,27 +29,6 @@
 
 #include "dmtimer1.h"
 
-/**
- * method to enable the clock instance for a specific timer module.
-extern void am335x_clock_enable_timer_module (enum am335x_clock_timer_modules module);
-*/
-
-/**
- * am335x gpio clock modules
-enum am335x_clock_gpio_modules {
-    AM335X_CLOCK_GPIO0,
-    AM335X_CLOCK_GPIO1,
-    AM335X_CLOCK_GPIO2,
-    AM335X_CLOCK_GPIO3,
-};
- */
-
-#define FREQUENCY 24000000
-#define HOUR (FREQUENCY / 3600)
-#define MINUTE (FREQUENCY / 60)
-#define SECOND FREQUENCY
-#define MILLISECOND (FREQUENCY * 100)
-
 #define TISTAT_RESETDONE (1 << 0)
 #define TCLR_AR (1 << 1)
 #define TCLR_ST (1 << 0)
@@ -81,21 +60,13 @@ struct dmtimer1_regs{
 
 static volatile struct dmtimer1_regs* timer1 = (struct dmtimer1_regs*)0x44e31000;
 
-//===========================
-// Time variables
-//===========================
 uint32_t last_time = 0;
-uint32_t hours = 0;
-uint32_t minutes = 0;
-uint32_t seconds = 0;
-uint32_t milliseconds = 0;
-uint32_t smaller_than_milliseconds = 0;
+uint64_t elapsed = 0;
+
+bool is_counting = false;
+
 
 void dmtimer1_init(){
-
-    static bool is_initialized = false;
-    if(is_initialized) return;
-
     am335x_clock_enable_timer_module(AM335X_CLOCK_TIMER1);
     timer1->tiocp_cfg = TIOCP_CFG_SOFTRESET;
     while((timer1->tistat & TISTAT_RESETDONE)==0);
@@ -105,50 +76,45 @@ void dmtimer1_init(){
     timer1->tcrr = 0;
 
     last_time = timer1 -> tcrr;
-
-    is_initialized = true;
 }
 
-void update_time() {
+void dmtimer1_refresh_time() {
 	uint32_t tcrr = timer1 -> tcrr;
 	uint32_t delta = tcrr - last_time;
 	last_time = tcrr;
-	smaller_than_milliseconds += delta;
+	if(is_counting) {
+		elapsed += delta;
+	}
+}
 
-	// Update milliseconds
-	milliseconds += smaller_than_milliseconds / 24000;
-	smaller_than_milliseconds = smaller_than_milliseconds % 24000;
+void dmtimer1_start() {
+	is_counting = true;
+}
 
-	// Update seconds
-	seconds += milliseconds / 1000;
-	milliseconds = milliseconds % 1000;
+void dmtimer1_stop() {
+	is_counting = false;
+}
 
-	// Update minutes
-	minutes += seconds / 60;
-	seconds = seconds % 60;
-
-	// Update hours
-	hours += minutes / 60;
-	minutes = minutes % 60;
+void dmtimer1_reset() {
+	elapsed = 0;
 }
 
 uint32_t dmtimer1_get_hours() {
-	update_time();
-	return hours;
+	return elapsed / (24000000ull * 3600ull);
 }
 
 uint32_t dmtimer1_get_minutes() {
-	update_time();
-	return minutes;
+	return elapsed / (24000000ull * 60ull);
 }
 
 uint32_t dmtimer1_get_seconds() {
-	update_time();
-	return seconds;
+	return elapsed / (24000000ull * 1ull);
 }
 
 uint32_t dmtimer1_get_milliseconds() {
-	update_time();
-	return milliseconds;
+	return elapsed / (24000000ull / 1000ull);
 }
 
+uint32_t dmtimer1_get_microseconds() {
+	return elapsed / (24000000ull / (1000ull * 1000ull));
+}

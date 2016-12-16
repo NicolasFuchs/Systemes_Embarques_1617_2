@@ -30,7 +30,59 @@
 
 #include "buttons.h"
 #include "leds.h"
+#include "seg7.h"
+#include "wheel.h"
 #include "dmtimer1.h"
+
+#define CHRONO_LED LED1
+#define RESET_BUTTON BUTTON3
+
+// ----------------------------------------------------------------------------
+// implementation of local methods...
+// ----------------------------------------------------------------------------
+
+void reset_all() {
+	leds_reset();
+	seg7_reset();
+	dmtimer1_stop();
+	dmtimer1_reset();
+}
+
+// ----------------------------------------------------------------------------
+
+void chrono() {
+	enable_led_exclusively(CHRONO_LED);
+	bool is_counting = false;
+	bool has_been_pressed = false;
+	while(!get_button_state(RESET_BUTTON)) {
+		bool is_pressed = wheel_button_is_pressed();
+		if(is_pressed && !has_been_pressed) {
+			if (is_counting) {
+				dmtimer1_stop();
+			} else {
+				dmtimer1_start();
+			}
+			is_counting = !is_counting;
+		}
+		has_been_pressed = is_pressed;
+		dmtimer1_refresh_time();
+		seg7_refresh_display();
+		seg7_display_value(dmtimer1_get_seconds());
+	}
+	reset_all();
+}
+
+// ----------------------------------------------------------------------------
+
+void countdown() {
+	while(true) {
+		if(get_button_state(BUTTON3)) {
+			break;
+		}
+
+	}
+	reset_all();
+}
 
 // ----------------------------------------------------------------------------
 // main program...
@@ -45,27 +97,16 @@ int main() {
 	// initialization...
 	buttons_init();
 	leds_init();
+	seg7_init();
+	wheel_init();
 	dmtimer1_init();
 
 	// application...
 	while (true) {
 		if (get_button_state(BUTTON1)) {
-			printf("Button 1 pressed\n");
-			change_led_state(LED1, true);
-			change_led_state(LED2, false);
-			change_led_state(LED3, false);
+			chrono();
 		}
 		else if (get_button_state(BUTTON2)) {
-			printf("Button 2 pressed\n");
-			change_led_state(LED1, false);
-			change_led_state(LED2, true);
-			change_led_state(LED3, false);
-		}
-		else if (get_button_state(BUTTON3)) {
-			printf("Button 3 pressed\n");
-			change_led_state(LED1, false);
-			change_led_state(LED2, false);
-			change_led_state(LED3, true);
 		}
 	}
 

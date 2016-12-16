@@ -37,4 +37,8 @@ void leds_init();
 
 void change_led_state(enum leds_set led, bool state);
 
+void enable_led_exclusively(enum leds_set led);
+
+void leds_reset();
+
 #endif

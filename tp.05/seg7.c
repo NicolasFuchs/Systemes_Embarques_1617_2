@@ -177,5 +177,11 @@ void seg7_refresh_display()
 	digit = (digit + 1) % 2;
 }
 
+void seg7_reset() {
+	am335x_gpio_change_states(DIG_GPIO, DIG_ALL, false);
+	am335x_gpio_change_states(DP_GPIO,  DP_ALL,  false);
+	am335x_gpio_change_states(SEG_GPIO, SEG_ALL, false);
+}
+
 
 

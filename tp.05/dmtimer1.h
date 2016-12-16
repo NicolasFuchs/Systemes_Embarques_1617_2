@@ -28,6 +28,14 @@
 
 void dmtimer1_init();
 
+void dmtimer1_refresh_time();
+
+void dmtimer1_start();
+
+void dmtimer1_stop();
+
+void dmtimer1_reset();
+
 uint32_t dmtimer1_get_hours();
 
 uint32_t dmtimer1_get_minutes();

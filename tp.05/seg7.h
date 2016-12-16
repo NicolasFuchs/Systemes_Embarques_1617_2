@@ -48,6 +48,7 @@ extern void seg7_display_value (int value);
  */
 extern void seg7_refresh_display();
 
+void seg7_reset();
 
 #endif
 
