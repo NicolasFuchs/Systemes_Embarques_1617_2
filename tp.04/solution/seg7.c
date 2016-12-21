@@ -53,7 +53,7 @@
 
 
 // macro to compute number of elements of an array
-#define ARRAY_OF(x) (sizeof(x) / sizeof(x[0]))
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
 // structure to initialize gpio pins used by 7-segment
 static const struct gpio_init {
@@ -132,7 +132,7 @@ void seg7_init()
 	am335x_gpio_init(SEG_GPIO);
 
 	// configure gpio pins as output
-	for (int i=ARRAY_OF(gpio_init)-1; i>=0; i--) {
+	for (int i=ARRAY_SIZE(gpio_init)-1; i>=0; i--) {
 		am335x_gpio_setup_pin_out(
 			gpio_init[i].module, 
 			gpio_init[i].pin_nr,
