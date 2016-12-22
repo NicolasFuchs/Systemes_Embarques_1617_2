@@ -29,12 +29,24 @@
 
 #include <stdbool.h>
 
+/**
+ * Boutons disponibles
+ */
 enum buttons_set {
 	BUTTON1, BUTTON2, BUTTON3
 };
 
+/**
+ * Cette méthode permet d'initialiser les boutons.
+ */
 void buttons_init();
 
+/**
+ * Getter permettant de retourner l'état d'un bouton.
+ *
+ * @param button le bouton
+ * @return état du bouton passé en paramètre
+ */
 bool get_button_state(enum buttons_set button);
 
 #endif

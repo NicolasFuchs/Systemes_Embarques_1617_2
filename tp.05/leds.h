@@ -29,16 +29,36 @@
 
 #include <stdbool.h>
 
+/**
+ * LEDs disponibles
+ */
 enum leds_set {
 	LED1, LED2, LED3
 };
 
+/**
+ * Cette méthode permet d'initialiser les LEDs
+ */
 void leds_init();
 
+/**
+ * Cette méthode permet d'allumer une seule LED.
+ *
+ * @param led la LED à allumer
+ */
 void change_led_state(enum leds_set led, bool state);
 
+/**
+ * Cette méthode permet de changer l'état d'une LED.
+ *
+ * @param led la LED à modifier
+ * @param state l'état
+ */
 void enable_led_exclusively(enum leds_set led);
 
+/**
+ * Cette méthode permet de réinitialiser les LEDs.
+ */
 void leds_reset();
 
 #endif

@@ -34,14 +34,19 @@
 #include "wheel.h"
 #include "dmtimer1.h"
 
-#define CHRONO_LED LED1
-#define COUNTDOWN_LED LED2
-#define RESET_BUTTON BUTTON3
+#define CHRONO_LED 			LED1	// Redéfinition de la constante LED1 en CHRONO_LED
+#define COUNTDOWN_LED 		LED2	// Redéfinition de la constante LED2 en COUNTDOWN
+#define CHRONO_BUTTON		BUTTON1 // Redéfinition de la constante BUTTON1 en CHRONO_BUTTON
+#define COUNTDOWN_BUTTON	BUTTON2 // Redéfinition de la constante BUTTON2 en COUNTDOWN_BUTTON
+#define RESET_BUTTON		BUTTON3	// Redéfinition de la constante BUTTON3 en RESET_BUTTON
 
 // ----------------------------------------------------------------------------
-// implementation of local methods...
+// Implémentation des méthodes locales
 // ----------------------------------------------------------------------------
 
+/**
+ * Cette méthode permet de réinitialiser l'affichage et le timer.
+ */
 void reset_all() {
 	leds_reset();
 	seg7_reset();
@@ -51,6 +56,11 @@ void reset_all() {
 
 // ----------------------------------------------------------------------------
 
+/**
+ * Cette méthode implémente un chronomètre.
+ *
+ * NOTE: Elle réinitialise l'affichage et le timer avant de quitter.
+ */
 void chrono() {
 	enable_led_exclusively(CHRONO_LED);
 	bool is_counting = false;
@@ -65,15 +75,27 @@ void chrono() {
 			}
 			is_counting = !is_counting;
 		}
+		if (dmtimer1_get_seconds() > 99) {
+			dmtimer1_stop();
+			dmtimer1_reset();
+			is_counting = false;
+		}
 		has_been_pressed = is_pressed;
 		dmtimer1_refresh_time();
-		seg7_display_value(dmtimer1_get_seconds());
+		seg7_display_time(dmtimer1_get_milliseconds());
 	}
 	reset_all();
 }
 
 // ----------------------------------------------------------------------------
 
+/**
+ * Cette méthode permet de modifier la valeur passée en paramètre grâce à la
+ * roue de la carte d'extension.
+ *
+ * @param counter la valeur à modifier
+ * @return la valeur modifée
+ */
 int32_t change_counter(int32_t counter) {
 	bool has_been_released = false;
 	while (!get_button_state(RESET_BUTTON)) {
@@ -106,6 +128,11 @@ int32_t change_counter(int32_t counter) {
 
 // ----------------------------------------------------------------------------
 
+/**
+ * Cette méthode implémente un compte à rebours.
+ *
+ * NOTE: Elle réinitialise l'affichage et le timer avant de quitter.
+ */
 void countdown() {
 	enable_led_exclusively(COUNTDOWN_LED);
 	bool has_been_pressed = false;
@@ -113,43 +140,44 @@ void countdown() {
 	while (!get_button_state(RESET_BUTTON)) {
 		bool is_pressed = wheel_button_is_pressed();
 		if ((is_pressed && !has_been_pressed)
-				|| (counter - dmtimer1_get_seconds() <= 0)) {
+				|| (counter - dmtimer1_get_milliseconds() <= 0)) {
 			is_pressed = true;
 			dmtimer1_stop();
-			counter = change_counter(counter - dmtimer1_get_seconds());
+			counter = change_counter(
+					(counter - dmtimer1_get_milliseconds()) / 1000) * 1000;
 			if (counter == -1) break;
 			dmtimer1_reset();
 			dmtimer1_start();
 		}
 		has_been_pressed = is_pressed;
 		dmtimer1_refresh_time();
-		seg7_display_value(counter - dmtimer1_get_seconds());
+		seg7_display_time(counter - dmtimer1_get_milliseconds());
 	}
 	reset_all();
 }
 
 // ----------------------------------------------------------------------------
-// main program...
+// Programme principal
 // ----------------------------------------------------------------------------
 
 int main() {
-	// print program banner
+	// Affiche la bannière
 	printf("HEIA-FR - Embedded Systems 1 Laboratory\n"
 			"An introduction to device driver development in C\n"
 			"--> AM335x DMTimer1 device driver\n");
 
-	// initialization...
+	// Initialisation des composants
 	buttons_init();
 	leds_init();
 	seg7_init();
 	wheel_init();
 	dmtimer1_init();
 
-	// application...
+	// Boucle principale du programme
 	while (true) {
-		if (get_button_state(BUTTON1)) {
+		if (get_button_state(CHRONO_BUTTON)) {
 			chrono();
-		} else if (get_button_state(BUTTON2)) {
+		} else if (get_button_state(COUNTDOWN_BUTTON)) {
 			countdown();
 		}
 	}

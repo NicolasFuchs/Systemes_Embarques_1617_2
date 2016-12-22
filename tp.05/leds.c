@@ -49,17 +49,17 @@ struct gpio_init {
 };
 
 // Données pour l'initialisation des GPIO
-static const struct gpio_init gpio_init[] = {
-		{ BUTTON_GPIO, PIN_LED1, AM335X_GPIO_PIN_OUT },
-		{ BUTTON_GPIO, PIN_LED2, AM335X_GPIO_PIN_OUT },
-		{ BUTTON_GPIO, PIN_LED3, AM335X_GPIO_PIN_OUT },
-};
+static const struct gpio_init gpio_init[] = { { BUTTON_GPIO, PIN_LED1,
+		AM335X_GPIO_PIN_OUT }, { BUTTON_GPIO, PIN_LED2, AM335X_GPIO_PIN_OUT }, {
+		BUTTON_GPIO, PIN_LED3, AM335X_GPIO_PIN_OUT }, };
 
 // Lookup table pour le mapping des buttons
 static const uint32_t leds[] = {
-		PIN_LED1, PIN_LED2, PIN_LED3,
-};
+PIN_LED1, PIN_LED2, PIN_LED3, };
 
+/**
+ * Cette méthode permet d'initialiser les LEDs
+ */
 void leds_init() {
 	// Initialisation du module GPIO
 	am335x_gpio_init(BUTTON_GPIO);
@@ -70,6 +70,11 @@ void leds_init() {
 	}
 }
 
+/**
+ * Cette méthode permet d'allumer une seule LED.
+ *
+ * @param led la LED à allumer
+ */
 void enable_led_exclusively(enum leds_set led) {
 	if (led > 2) {
 		return;
@@ -78,6 +83,12 @@ void enable_led_exclusively(enum leds_set led) {
 	am335x_gpio_change_state(BUTTON_GPIO, leds[led], true);
 }
 
+/**
+ * Cette méthode permet de changer l'état d'une LED.
+ *
+ * @param led la LED à modifier
+ * @param state l'état
+ */
 void change_led_state(enum leds_set led, bool state) {
 	if (led > 2) {
 		return;
@@ -85,6 +96,9 @@ void change_led_state(enum leds_set led, bool state) {
 	am335x_gpio_change_state(BUTTON_GPIO, leds[led], state);
 }
 
+/**
+ * Cette méthode permet de réinitialiser les LEDs.
+ */
 void leds_reset() {
 	for (uint32_t i = 0; i < ARRAY_OF(gpio_init); ++i) {
 		am335x_gpio_change_state(gpio_init[i].module, gpio_init[i].pin, false);
