@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LEDS_H
-#define LEDS_H
+#ifndef BUTTONS_H
+#define BUTTONS_H
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -16,25 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project: HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	Introduction to device driver development in C
+ * Abstract:    Introduction to device driver development in C
  *
- * Purpose:	 Module for managing the leds of the HEIA-FR extension card of the
+ * Purpose:  Module for managing the buttons of the HEIA-FR extension card of the
  *           Beaglebone Black board
  *
- * Author: 	Jonathan Rial, Alan Sueur
- * Date: 	december 2016
+ * Author:  Alan Sueur, Jonathan Rial
+ * Date:    17.12.2016
  */
 
 #include <stdbool.h>
 
-enum leds_set {
-	LED1, LED2, LED3
+enum buttons_set {
+    BUTTON1, BUTTON2, BUTTON3
 };
 
-void leds_init();
 
-void change_led_state(enum leds_set led, bool state);
+/**
+ * method to initialize the resoures of the button
+ * this method shall be called prior any other.
+ */
+void buttons_init();
+
+
+/**
+ * method to get the state of a specific button.
+ *
+ * @param button the specific button
+ */
+bool buttons_get_state(enum buttons_set button);
 
 #endif

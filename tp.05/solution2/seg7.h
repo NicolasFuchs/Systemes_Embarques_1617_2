@@ -26,6 +26,9 @@
  *
  * Author: 	Daniel Gachet
  * Date: 	26.10.2016
+ *
+ * Modified by:	Jonathan Rial, Alan Sueur
+ * Date:		december 2016
  */
 
 /**
@@ -34,21 +37,30 @@
  */
 extern void seg7_init();
 
-
 /**
  * method to display a value [-99..99] on the the 7-segments display
  * for negative value, a dot will be displayed.
  * 
  * @param value value to display
  */
-extern void seg7_display_value (int value);
+extern void seg7_display_value(int value);
+
+/**
+ * method to display time with precision on the 7-segments display.
+ *
+ * @param milli time in milliseconds
+ */
+void seg7_display_time(int milli);
 
 /**
  * method to refresh the 7-segment display
  */
 extern void seg7_refresh_display();
 
+/**
+ * method to reset the 7-segments display.
+ */
+void seg7_reset();
 
 #endif
-
 

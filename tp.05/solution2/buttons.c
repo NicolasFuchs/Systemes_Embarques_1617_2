@@ -60,6 +60,9 @@ static const uint32_t buttons[] = {
 		PIN_BUTTON1, PIN_BUTTON2, PIN_BUTTON3,
 };
 
+/**
+ * Cette méthode permet d'initialiser les boutons.
+ */
 void buttons_init() {
 	// Initialisation du module GPIO
 	am335x_gpio_init(BUTTON_GPIO);
@@ -70,6 +73,12 @@ void buttons_init() {
 	}
 }
 
+/**
+ * Getter permettant de retourner l'état d'un bouton.
+ *
+ * @param button le bouton
+ * @return état du bouton passé en paramètre
+ */
 bool get_button_state(enum buttons_set button) {
 	if (button > 2) {
 		return false;

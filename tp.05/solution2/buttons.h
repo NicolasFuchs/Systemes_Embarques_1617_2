@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DMTIMER1_H
-#define DMTIMER1_H
+#ifndef BUTTONS_H
+#define BUTTONS_H
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -20,12 +20,33 @@
  *
  * Abstract:	Introduction to device driver development in C
  *
- * Purpose:	 Implementation of a basic timer based on the AM335x DMTimer1 timer.
+ * Purpose:	 Module for managing the buttons of the HEIA-FR extension card of the
+ *           Beaglebone Black board
  *
  * Author: 	Jonathan Rial, Alan Sueur
  * Date: 	december 2016
  */
 
-// Code here
+#include <stdbool.h>
+
+/**
+ * Boutons disponibles
+ */
+enum buttons_set {
+	BUTTON1, BUTTON2, BUTTON3
+};
+
+/**
+ * Cette méthode permet d'initialiser les boutons.
+ */
+void buttons_init();
+
+/**
+ * Getter permettant de retourner l'état d'un bouton.
+ *
+ * @param button le bouton
+ * @return état du bouton passé en paramètre
+ */
+bool get_button_state(enum buttons_set button);
 
 #endif
