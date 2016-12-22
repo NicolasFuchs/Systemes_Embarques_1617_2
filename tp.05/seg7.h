@@ -16,16 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project: HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	7-Segment Display Device Driver
+ * Abstract:    7-Segment Display Device Driver
  *
- * Purpose:	This module implements a method to diplay a value in range
- *   		of -99 to 99 on a two 7-segments display of the HEIA-FR 
- * 		extension board of the Beaglebone black.
+ * Purpose: This module implements a method to diplay a value in range
+ *          of -99 to 99 on a two 7-segments display of the HEIA-FR
+ *      extension board of the Beaglebone black.
  *
- * Author: 	Daniel Gachet
- * Date: 	26.10.2016
+ * Author:  Daniel Gachet
+ * Date:    26.10.2016
  */
 
 /**
@@ -36,19 +36,30 @@ extern void seg7_init();
 
 
 /**
- * method to display a value [-99..99] on the the 7-segments display
- * for negative value, a dot will be displayed.
+ * method to display a value [0..99] on the the 7-segments display
+ * for values below 10, a dot will be displayed.
  * 
  * @param value value to display
+ * @param is_dot
  */
-extern void seg7_display_value (int value);
+extern void seg7_display_value (int value, bool is_dot);
+
 
 /**
- * method to refresh the 7-segment display
+ * method to refresh the 7-segment display.
  */
 extern void seg7_refresh_display();
 
 
+/**
+ * method to display zero.
+ */
+extern void seg7_display_zero();
+
+
+/**
+ * method to display two dashs.
+ */
+extern void seg7_display_null();
+
 #endif
-
-

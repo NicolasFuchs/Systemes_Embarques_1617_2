@@ -16,25 +16,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project: HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	Introduction to device driver development in C
+ * Abstract:    Introduction to device driver development in C
  *
- * Purpose:	 Module for managing the leds of the HEIA-FR extension card of the
+ * Purpose:  Module for managing the leds of the HEIA-FR extension card of the
  *           Beaglebone Black board
  *
- * Author: 	Jonathan Rial, Alan Sueur
- * Date: 	december 2016
+ * Author:  Alan Sueur, Jonathan Rial
+ * Date:    17.12.2016
  */
 
 #include <stdbool.h>
 
 enum leds_set {
-	LED1, LED2, LED3
+    LED1, LED2, LED3
 };
 
+
+/**
+ * method to initialize the resoures of the led
+ * this method shall be called prior any other.
+ */
 void leds_init();
 
-void change_led_state(enum leds_set led, bool state);
+
+/**
+ * method to change the state of a specific led.
+ *
+ * @param led the specific led
+ * @param state turn on/off the led
+ */
+void leds_set_state(enum leds_set led, bool state);
 
 #endif

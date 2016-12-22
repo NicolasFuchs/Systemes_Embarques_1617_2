@@ -16,18 +16,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project: HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	Wheel Device Driver
+ * Abstract:    Wheel Device Driver
  *
- * Purpose:	This module implements a method to get state of the wheel
- *		of the HEIA-FR extension board of the Beaglebone black. 
+ * Purpose: This module implements a method to get state of the wheel
+ *      of the HEIA-FR extension board of the Beaglebone black.
  *
- * Author: 	Daniel Gachet
- * Date: 	26.10.2016
+ * Author:  Daniel Gachet
+ * Date:    26.10.2016
  */
 
 #include <stdint.h>
+
 /**
  * wheel states
  */
@@ -69,7 +70,4 @@ extern enum wheel_direction wheel_get_direction();
  */
 extern bool wheel_button_is_pressed();
 
-
 #endif
-
-

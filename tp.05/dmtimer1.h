@@ -16,16 +16,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project: HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	Introduction to device driver development in C
+ * Abstract:    Introduction to device driver development in C
  *
- * Purpose:	 Implementation of a basic timer based on the AM335x DMTimer1 timer.
+ * Purpose:  Implementation of a basic timer based on the AM335x DMTimer1 timer.
  *
- * Author: 	Jonathan Rial, Alan Sueur
- * Date: 	december 2016
+ * Author:  Alan Sueur, Jonathan Rial
+ * Date:    17.12.2016
  */
 
-// Code here
+/**
+ * method to initialize the resoures of the dmtimer
+ * this method shall be called prior any other.
+ */
+void dmtimer1_init();
+
+/**
+ * method to get the value of the counter.
+ *
+ * @return value of the counter
+ */
+uint32_t dmtimer1_get_counter();
+
+
+/**
+ * method to get the frequency of the timer.
+ *
+ * @return frequency of the timer
+ */
+uint32_t dmtimer1_get_frequency();
+
+
+/**
+ * method to get the time spent with the following format : second+tenth_second.
+ *
+ * @return nb of seconds and tenth of seconds
+ */
+uint32_t dmtimer1_get_second_and_tenth();
+
+
+/**
+ * method to get the time spent in seconds.
+ *
+ * @return nb of seconds
+ */
+uint32_t dmtimer1_get_second();
+
+
+/**
+ * method to get the time spent in tenth of seconds.
+ *
+ * @return nb of tenth of seconds
+ */
+uint32_t dmtimer1_get_tenth_second();
+
+
+/**
+ * method to reset the timer.
+ */
+void dmtimer1_reset();
 
 #endif
