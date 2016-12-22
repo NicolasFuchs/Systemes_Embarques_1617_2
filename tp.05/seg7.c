@@ -161,6 +161,25 @@ void seg7_display_value (int value)
 
 // -----------------------------------------------------------------------------
 
+void seg7_display_time (int milli)
+{
+	// test for negative values
+	/*uint32_t dot = 0;
+	if (milli < 0) {
+		dot = DP1;
+		milli = -milli;
+	}
+
+	// display unit & decade
+	display[0].seg7 = seg7[milli%10];
+	display[1].seg7 = seg7[(milli/10)%10];
+	display[1].dot  = dot;*/
+
+	seg7_refresh_display();
+}
+
+// -----------------------------------------------------------------------------
+
 void seg7_refresh_display()
 {
 	static unsigned digit = 0;

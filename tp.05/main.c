@@ -35,6 +35,7 @@
 #include "dmtimer1.h"
 
 #define CHRONO_LED LED1
+#define COUNTDOWN_LED LED2
 #define RESET_BUTTON BUTTON3
 
 // ----------------------------------------------------------------------------
@@ -54,9 +55,9 @@ void chrono() {
 	enable_led_exclusively(CHRONO_LED);
 	bool is_counting = false;
 	bool has_been_pressed = false;
-	while(!get_button_state(RESET_BUTTON)) {
+	while (!get_button_state(RESET_BUTTON)) {
 		bool is_pressed = wheel_button_is_pressed();
-		if(is_pressed && !has_been_pressed) {
+		if (is_pressed && !has_been_pressed) {
 			if (is_counting) {
 				dmtimer1_stop();
 			} else {
@@ -66,7 +67,6 @@ void chrono() {
 		}
 		has_been_pressed = is_pressed;
 		dmtimer1_refresh_time();
-		seg7_refresh_display();
 		seg7_display_value(dmtimer1_get_seconds());
 	}
 	reset_all();
@@ -74,12 +74,56 @@ void chrono() {
 
 // ----------------------------------------------------------------------------
 
-void countdown() {
-	while(true) {
-		if(get_button_state(BUTTON3)) {
+int32_t change_counter(int32_t counter) {
+	bool has_been_released = false;
+	while (!get_button_state(RESET_BUTTON)) {
+		enum wheel_states state = wheel_get_state();
+		switch (state) {
+		case WHEEL_INCR:
+			if (counter < 99) {
+				counter++;
+			}
+			break;
+		case WHEEL_DECR:
+			if (counter > 0) {
+				counter--;
+			}
+			break;
+		case WHEEL_RESET:
+			if (has_been_released) {
+				return counter;
+			}
+			break;
+		default:
+			has_been_released = true;
 			break;
 		}
+		dmtimer1_refresh_time();
+		seg7_display_value(counter);
+	}
+	return -1;
+}
 
+// ----------------------------------------------------------------------------
+
+void countdown() {
+	enable_led_exclusively(COUNTDOWN_LED);
+	bool has_been_pressed = false;
+	int32_t counter = 0;
+	while (!get_button_state(RESET_BUTTON)) {
+		bool is_pressed = wheel_button_is_pressed();
+		if ((is_pressed && !has_been_pressed)
+				|| (counter - dmtimer1_get_seconds() <= 0)) {
+			is_pressed = true;
+			dmtimer1_stop();
+			counter = change_counter(counter - dmtimer1_get_seconds());
+			if (counter == -1) break;
+			dmtimer1_reset();
+			dmtimer1_start();
+		}
+		has_been_pressed = is_pressed;
+		dmtimer1_refresh_time();
+		seg7_display_value(counter - dmtimer1_get_seconds());
 	}
 	reset_all();
 }
@@ -105,8 +149,8 @@ int main() {
 	while (true) {
 		if (get_button_state(BUTTON1)) {
 			chrono();
-		}
-		else if (get_button_state(BUTTON2)) {
+		} else if (get_button_state(BUTTON2)) {
+			countdown();
 		}
 	}
 
