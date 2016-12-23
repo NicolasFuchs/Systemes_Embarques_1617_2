@@ -15,5 +15,5 @@ void buzzer_set_frequency(int f){
 }
 
 void buzzer_set_cycle(int c){
-
+c;
 }
