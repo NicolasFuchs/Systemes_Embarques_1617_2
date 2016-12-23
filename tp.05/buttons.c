@@ -47,5 +47,3 @@ bool is_button_pushed(int btnNb){
 }
 
 
-
-

@@ -22,6 +22,7 @@
  *
  * Author: 	Charlotte Junod et Nicolas Fuchs
  * Date: 	15.12.16
+>>>>>>> 95cf8c143125f3f580acc62ca07fdc531666cdb2
  */
 
 #include <stdbool.h>
