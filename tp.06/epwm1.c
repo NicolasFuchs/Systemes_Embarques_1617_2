@@ -211,7 +211,7 @@ void epwm1_set_frequency(uint32_t freq){
 	pwm->epwm.tbcnt = 0;	//compteur
 	pwm->epwm.tbctl = ?;
 
-	epwm1_set_duty(?);
+	epwm1_set_duty(50);
 }
 
 // -----------------------------------------------------------------------------
