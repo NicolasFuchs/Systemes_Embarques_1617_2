@@ -5,6 +5,7 @@
  *      Author: lmi
  */
 
+#include "epwm1.c"
 
 void buzzer_init(){
 
@@ -15,5 +16,5 @@ void buzzer_set_frequency(int f){
 }
 
 void buzzer_set_cycle(int c){
-c;
+	epwm->cmpa = epwm->tbprd*duty/100;
 }

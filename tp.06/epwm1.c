@@ -152,6 +152,7 @@ static const struct {
 
 // am335x epwm1 controller memory mapped access register pointers
 static volatile struct pwm_ctrl* pwm = (struct pwm_ctrl*)0x48302000;
+static volatile struct epwm_ctrl* epwm = (struct epwm_ctrl*)0x48302000;
 
 // macro to compute number of elements of an array
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
@@ -166,8 +167,7 @@ struct divider {
 	uint32_t hsdiv;		// high speed clock prescale bits
 };
 
-static struct divider get_divider(uint32_t f)
-{
+static struct divider get_divider(uint32_t f) {
 	struct divider divider;
 	return divider;
 }
@@ -176,22 +176,27 @@ static struct divider get_divider(uint32_t f)
 // implementation of public methods
 // -----------------------------------------------------------------------------
 
-void epwm1_init()
-{
+void epwm1_init() {
 	am335x_clock_enable_epwm_module (AM335X_CLOCK_EPWM1);
 	am335x_mux_setup_epwm_pins (AM335X_MUX_EPWM1);
+	epwm->tbprd = 0;
+	epwm->tbcnt = 0;
+	epwm->tbctl = 0;
+	epwm->cmpa = 0;
+	epwm->cmpctl = 0;
+	epwm->aqctla = 0;
 }
 
 
 // -----------------------------------------------------------------------------
 
-void epwm1_set_frequency(uint32_t freq)
-{
+void epwm1_set_frequency(uint32_t freq) {
+	epwm->tbprd = SYSCLK/(get_divider(freq)->clkdiv*get_divider(freq)->hsdiv)/freq;
 }
 
 // -----------------------------------------------------------------------------
 
-void epwm1_set_duty(uint32_t duty)
-{
+void epwm1_set_duty(uint32_t duty) {
+
 }
 
