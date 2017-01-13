@@ -1,6 +1,7 @@
+
 #pragma once
-#ifndef BUZZER_H
-#define BUZZER_H
+#ifndef LEDS_H_
+#define LEDS_H_
 
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
@@ -21,19 +22,36 @@
  *
  * Abstract:	Introduction to device driver development in C
  *
- * Purpose:	Program for TP06 Systèmes embarqués
- *			manage epwm1 functions
+ * Purpose:	Demo program implementing a basic timer and countdown
+ *		application, which is based on the AM335x DMTimer1 timer.
  *
  * Author: 	Charlotte Junod et Nicolas Fuchs
- * Date: 	13.1.2017
+ * Date: 	15.12.16
  */
 
-void buzzer_init();
+/* leds_init:
+ * inits the three leds
+ */
+void leds_init();
 
-void buzzer_set_frequency(int f);
+/* leds_turn_on:
+ * no: number of the led that we want to turn on
+ */
+void leds_turn_on(int no);
 
-void buzzer_on();
+/* leds_all_on:
+ * turns all the leds on
+ */
+void leds_all_on();
 
-void buzzer_off();
+/* leds_turn_off:
+ * no: number of the led that we want to turn off
+ */
+void leds_turn_off(int no);
 
-#endif
+/* leds_all_off:
+ * turns all the leds off
+ */
+void leds_all_off();
+
+#endif /* LEDS_H_ */

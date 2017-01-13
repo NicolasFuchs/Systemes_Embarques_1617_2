@@ -1,6 +1,7 @@
+
 #pragma once
-#ifndef BUZZER_H
-#define BUZZER_H
+#ifndef WHEEL_H_
+#define WHEEL_H_
 
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
@@ -19,21 +20,33 @@
  *
  * Project:	HEIA-FR / Embedded Systems 1 Laboratory
  *
- * Abstract:	Introduction to device driver development in C
+ * Abstract:	Introduction the C programming language
  *
- * Purpose:	Program for TP06 Systèmes embarqués
- *			manage epwm1 functions
+ * Purpose:	Simple C program implementing basic access to the GPIO modules
+ *		of the AM3358 microprocessor to control the wheel and the
+ * 		7-segment display of the HEIA-FR extension card of the
+ *		Beaglebone Black board
  *
- * Author: 	Charlotte Junod et Nicolas Fuchs
- * Date: 	13.1.2017
+ * Author: 	Charlotte Junod and Nicolas Fuchs
+ * Date: 	25.11.2016
  */
 
-void buzzer_init();
+/*
+ * wheel_states:
+ *
+ */
+enum wheel_states {NONE,INCR,DECR,RESET};
 
-void buzzer_set_frequency(int f);
+/*
+ * wheel_init:
+ * init the wheel
+ */
+void wheel_init();
 
-void buzzer_on();
+/*
+ * wheel_get_state:
+ * return the current state of the wheel
+ */
+enum wheel_states wheel_get_state();
 
-void buzzer_off();
-
-#endif
+#endif /* WHEEL_H_ */
