@@ -6,6 +6,9 @@
  */
 
 #include <stdbool.h>
+#include <stdio.h>
+#include "am335x_i2c.h"
+#include "am335x_gpio.h"
 
 #define THERMO 	0x48
 #define TEMP 	0

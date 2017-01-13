@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-
+#include "buzzer.h"
 // ----------------------------------------------------------------------------
 
 int main()
@@ -40,8 +40,14 @@ int main()
 		"--> I2C Thermometer (click board Thermo3)\n"
 		"--> PWM Buzzer (click board Buzz)\n");
 
+
+	buzzer_init();
+	buzzer_set_frequency(3800);
+	buzzer_on();
+
 	// application...
 	while(true) {
+
 	}
 
 	return 0;
