@@ -1,6 +1,7 @@
+
 #pragma once
-#ifndef BUZZER_H
-#define BUZZER_H
+#ifndef BUTTONS_H_
+#define BUTTONS_H_
 
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
@@ -21,19 +22,26 @@
  *
  * Abstract:	Introduction to device driver development in C
  *
- * Purpose:	Program for TP06 Systèmes embarqués
- *			manage epwm1 functions
+ * Purpose:	Demo program implementing a basic timer and countdown
+ *		application, which is based on the AM335x DMTimer1 timer.
  *
  * Author: 	Charlotte Junod et Nicolas Fuchs
- * Date: 	13.1.2017
+ * Date: 	15.12.16
  */
 
-void buzzer_init();
+#include "am335x_gpio.h"
+#include <stdbool.h>
+#include <stdint.h>
 
-void buzzer_set_frequency(int f);
+/* buttons_init:
+ * inits the three buttons
+ */
+void buttons_init();
 
-void buzzer_on();
+/* is_button_pushed:
+ * btnNb: number of the button about which we want information
+ * return true if the button is pushed, false otherwise
+ */
+bool is_button_pushed(int btnNb);
 
-void buzzer_off();
-
-#endif
+#endif /* BUTTONS_H_ */

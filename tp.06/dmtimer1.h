@@ -1,6 +1,7 @@
+
 #pragma once
-#ifndef BUZZER_H
-#define BUZZER_H
+#ifndef DMTIMER_H_
+#define DMTIMER_H_
 
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
@@ -21,19 +22,26 @@
  *
  * Abstract:	Introduction to device driver development in C
  *
- * Purpose:	Program for TP06 Systèmes embarqués
- *			manage epwm1 functions
+ * Purpose:	Demo program implementing a basic timer and countdown
+ *		application, which is based on the AM335x DMTimer1 timer.
  *
  * Author: 	Charlotte Junod et Nicolas Fuchs
- * Date: 	13.1.2017
+ * Date: 	15.12.16
  */
 
-void buzzer_init();
+/* timer_init:
+ * inits the dmtimer1
+ */
+void timer_init();
 
-void buzzer_set_frequency(int f);
+/* timer_getVal:
+ * returns the current value of the timer
+ */
+uint32_t timer_getVal();
 
-void buzzer_on();
+/* timer_get_frequency:
+ * return the frequency of the timer
+ */
+uint32_t timer_get_frequency();
 
-void buzzer_off();
-
-#endif
+#endif /* DMTIMER_H_ */

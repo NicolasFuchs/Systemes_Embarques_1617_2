@@ -1,8 +1,27 @@
-/*
- * thermo.c
+/**
+ * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
- *  Created on: Dec 23, 2016
- *      Author: lmi
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ *
+ * Abstract:	Introduction to device driver development in C
+ *
+ * Purpose:	Program for TP06 Systèmes embarqués
+ *			manage thermometer
+ *
+ * Author: 	Charlotte Junod et Nicolas Fuchs
+ * Date: 	13.1.2017
  */
 
 #include <stdbool.h>
@@ -48,6 +67,7 @@ int thermo_read_low_seuil(){
 	printf("low limit is %d\n",tmp);
 	return tmp;
 }
+
 int thermo_read_high_seuil(){
 	uint8_t data[2] ={0x80,0};
 	int status=am335x_i2c_read(AM335X_I2C2,THERMO,T_HIGH,data,2);
@@ -62,6 +82,7 @@ int thermo_set_low_seuil(int tmp){
 	printf("low limit set to %d\n",tmp);
 	return status;
 }
+
 int thermo_set_high_seuil(int tmp){
 	uint8_t data[2]={tmp,0};
 		int status=am335x_i2c_write(AM335X_I2C2,THERMO,T_HIGH,data,2);
