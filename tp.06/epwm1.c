@@ -33,22 +33,22 @@
 // define am335x epwm controller registers
 struct epwm_ctrl {
 	// Time-Base Registers (TB)
-	uint16_t tbctl;		// 00
+	uint16_t tbctl;		// 00 -> reset value (?)
 	uint16_t tbsts;		// 02
 	uint16_t tbphshr;	// 04
 	uint16_t tbphs;		// 06
-	uint16_t tbcnt;		// 08
-	uint16_t tbprd;		// 0a
+	uint16_t tbcnt;		// 08 -> compteur
+	uint16_t tbprd;		// 0a -> période
 	uint16_t res1[1];	// 0c
 
 	// Counter Compare Registers (CC)
-	uint16_t cmpctl;	// 0e
+	uint16_t cmpctl;	// 0e -> "shadowing" (?)
 	uint16_t cmpahr;	// 10
-	uint16_t cmpa;		// 12
+	uint16_t cmpa;		// 12 -> counter compare
 	uint16_t cmpb;		// 14
 
 	// Action Qualifier Registers (AQ)
-	uint16_t aqctla;	// 16
+	uint16_t aqctla;	// 16 -> 0 -> actions disabled
 	uint16_t aqctlb;	// 18
 	uint16_t aqsfrc;	// 1a
 	uint16_t aqcsfrc;	// 1c
@@ -167,8 +167,21 @@ struct divider {
 	uint32_t hsdiv;		// high speed clock prescale bits
 };
 
-static struct divider get_divider(uint32_t f) {
+static struct divider get_divider(uint32_t f)
+{
+	int periode;
+	if(f==0) periode=0;
+	else periode = SYSCLK/f;
+	int diviseur= (periode*TB_PRD_MAX-1)/TB_PRD_MAX;
+
+	int i;
+	for(i=0; i<ARRAY_SIZE(dividers)-1 && diviseur>dividers[i].div;i++);
+
 	struct divider divider;
+	divider.clkdiv = dividers[i].clkdiv;
+	divider.hsdiv = dividers[i].hsdiv;
+	divider.prd = (f==0)? 0 : dividers[i].div/f;
+
 	return divider;
 }
 
@@ -179,24 +192,41 @@ static struct divider get_divider(uint32_t f) {
 void epwm1_init() {
 	am335x_clock_enable_epwm_module (AM335X_CLOCK_EPWM1);
 	am335x_mux_setup_epwm_pins (AM335X_MUX_EPWM1);
-	epwm->tbprd = 0;
-	epwm->tbcnt = 0;
-	epwm->tbctl = 0;
-	epwm->cmpa = 0;
-	epwm->cmpctl = 0;
-	epwm->aqctla = 0;
+
+	pwm->epwm.tbprd =0;
+	pwm->epwm.tbcnt =0;
+	pwm->epwm.tbctl =0;
+	pwm->epwm.cmpa =0;
+	pwm->epwm.cmpctl =0;
+	pwm->epwm.aqctla =0;
 }
 
 
 // -----------------------------------------------------------------------------
+//PREC: freq<=SYSCLK
+void epwm1_set_frequency(uint32_t freq){
+	struct divider div = get_divider(freq);
+	pwm->epwm.tbprd = div.prd;  //période
+	pwm->epwm.tbcnt = 0;	//compteur
+	pwm->epwm.tbctl = ?;
 
-void epwm1_set_frequency(uint32_t freq) {
-	epwm->tbprd = SYSCLK/(get_divider(freq)->clkdiv*get_divider(freq)->hsdiv)/freq;
+	epwm1_set_duty(50);
 }
 
 // -----------------------------------------------------------------------------
 
-void epwm1_set_duty(uint32_t duty) {
-
+void epwm1_set_duty(uint32_t duty){
+	if(duty==0){
+		pwm->epwm.cmpa=0;
+		pwm->epwm.aqctla= AQ_ZRO_CLEAR;
+	}else if (duty>=100){
+		duty=100;
+		pwm->epwm.cmpa=0;
+		pwm->epwm.aqctla=AQ_ZRO_SET;
+	}else{
+		pwm->epwm.cmpa=pwm->epwm.tbprd*duty/100;
+		pwm->epwm.aqctla=?;
+	}
+	??=duty;
 }
 
