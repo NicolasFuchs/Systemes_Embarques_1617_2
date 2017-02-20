@@ -42,43 +42,43 @@ fmt_s:  .asciz "spsr = 0x%08lx, %10lu\n"
 #define REG_SP 13
 
 dump_regs:
-        push    {r4,lr}
+        push    {r4,lr}                 // save 2 registers
         sub     sp, #DUMP_REGS_LOCAL_VARIABLE_SIZE*4
         stmia   sp, {r0-r15}
 
-        mrs     r0, cpsr
+        mrs     r0, cpsr                // save cpsr at offset 16
         str     r0, [sp, #DUMP_REGS_OFFSET_CPSR*4]
 
-        mrs     r0, spsr
+        mrs     r0, spsr                // save spsr at offset 17
         str     r0, [sp, #DUMP_REGS_OFFSET_SPSR*4]
 
-        ldr     r0, [sp, #REG_SP*4]
+        ldr     r0, [sp, #REG_SP*4]         // fix sp
         add     r0, #(2 + DUMP_REGS_LOCAL_VARIABLE_SIZE)*4
         str     r0, [sp, #REG_SP*4]
 
-        mov     r4, #0
+        mov     r4, #0                  // for (int i=0; i<16; i++)
 
-1:      ldr     r0, =fmt_r
-        mov     r1, r4
-        ldr     r2, [sp, r4, lsl #2]
-        mov     r3, r2
+1:      ldr     r0, =fmt_r              // format
+        mov     r1, r4                  // register no
+        ldr     r2, [sp, r4, lsl #2]    // register value
+        mov     r3, r2                  // copy value to r3
         bl      printf
         add     r4, #1
         cmp     r4, #16
         blo     1b
 
-        ldr     r0, =fmt_c
+        ldr     r0, =fmt_c              // format
         ldr     r1, [sp, #DUMP_REGS_OFFSET_CPSR*4]
-        mov     r2, r1
+        mov     r2, r1                  // copy value to r2
         bl      printf
 
-        ldr     r0, =fmt_s
+        ldr     r0, =fmt_s              // format
         ldr     r1, [sp, #DUMP_REGS_OFFSET_SPSR*4]
-        mov     r2, r1
+        mov     r2, r1                  // copy value to r2
         bl      printf
 
         add     sp, #DUMP_REGS_LOCAL_VARIABLE_SIZE*4
-        pop     {r4,pc}
+        pop     {r4,pc}                 // restore R4 and return
 
 
 get_regs:
@@ -93,7 +93,7 @@ get_regs:
 get_main_id:
         mrc   p15, 0, r0, c0, c0, 0
         bx    lr
-
+        
 
 get_silicon_id:
         mrc     p15, 1, r0, c0, c0, 7
