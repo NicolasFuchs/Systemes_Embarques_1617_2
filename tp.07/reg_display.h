@@ -36,9 +36,30 @@ struct regs {
     uint32_t CPSR;
 };
 
+/**
+ * Permet de récupérer les registres, de les stocker sur la pile et d'afficher leur valeur
+ */
 extern void dump_regs();
+
+/**
+ * Mets les valeurs des registres voulues dans la structure regs
+ *
+ * @param struct regs Le pointeur de la structure afin qu'elle puisse être modifiée.
+ */
 extern void get_regs(struct regs *r);
+
+/**
+ * Récupère le main id.
+ *
+ * @return le main id.
+ */
 extern uint32_t get_main_id();
+
+/**
+ * Récupère le silicon id.
+ *
+ * @return le silicon id.
+ */
 extern uint32_t get_silicon_id();
 
 #endif
