@@ -28,6 +28,8 @@
 #include <stdint.h>
 #include "reg_display.h"
 
+// ----------------------------------------------------------------------------
+
 int main() {
     dump_regs();
     printf("\n");
