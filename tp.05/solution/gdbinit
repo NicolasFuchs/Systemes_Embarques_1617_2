@@ -1,9 +1,0 @@
-target remote :2331
-monitor reset
-monitor go
-monitor sleep 100
-monitor halt
-load 
-break main
-cont
-
