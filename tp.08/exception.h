@@ -2,7 +2,7 @@
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
 /**
- * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
+ * Copyright 2017 University of Applied Sciences Western Switzerland / Fribourg
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
  * 
  * Project:	HEIA-FR / Embedded Systems 2 Laboratory
  *
- * Abstract: 	ARM Exception Handling 
+ * Abstract: 	Interrupt handling demo and test program
  *
- * Purpose:	Module do deal with ARM exception handling
+ * Purpose:	Main module to demonstrate and to test the ARM Cortex-A8
+ *              low level interrupt handling.
  *
- * Author: 	Daniel Gachet
- * Date: 	27.02.2016
+ * Author: 	<Nicolas Fuchs et Alan Sueur>
+ * Date: 	<13.03.17>
  */
 
 /**

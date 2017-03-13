@@ -20,8 +20,8 @@
  * Purpose:	Main module to demonstrate and to test the ARM Cortex-A8 
  *              low level interrupt handling.
  *
- * Author: 	<author>
- * Date: 	<date>
+ * Author: 	<Nicolas Fuchs et Alan Sueur>
+ * Date: 	<13.03.17>
  */
 
 #include <stdlib.h>

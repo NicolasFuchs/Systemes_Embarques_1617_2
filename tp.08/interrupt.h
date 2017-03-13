@@ -18,13 +18,13 @@
  * 
  * Project:	HEIA-FR / Embedded Systems 2 Laboratory
  *
- * Abstract: 	ARM Interrupt Handling - First-Level Interface
- *  
- * Purpose:	Module to deal with the first-level ARM Cortex-A8 
- *		microprocessor interrupt logic
+ * Abstract: 	Interrupt handling demo and test program
  *
- * Author: 	Daniel Gachet
- * Date: 	04.03.2017
+ * Purpose:	Main module to demonstrate and to test the ARM Cortex-A8
+ *              low level interrupt handling.
+ *
+ * Author: 	<Nicolas Fuchs et Alan Sueur>
+ * Date: 	<13.03.17>
  */
 
 
