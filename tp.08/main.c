@@ -29,12 +29,19 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "interrupt.h"
+#include "exception.h"
+
 int main ()
 {
 	printf ("\n");
 	printf ("HEIA-FR - Embedded Systems 2 Laboratory\n");
 	printf ("Low Level Interrupt Handling on ARM Cortex-A8\n");
 	printf ("---------------------------------------------\n");
+
+    // initialize low level resourcces
+    interrupt_init();
+    exception_init();
 
 	printf ("Test data abort with a miss aligned access\n");
 	long l = 0;
