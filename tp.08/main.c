@@ -31,6 +31,9 @@
 #include "interrupt.h"
 #include "exception.h"
 
+#include "interrupt.h"
+#include "exception.h"
+
 int main ()
 {
 	printf ("\n");
@@ -38,9 +41,9 @@ int main ()
 	printf ("Low Level Interrupt Handling on ARM Cortex-A8\n");
 	printf ("---------------------------------------------\n");
 
-	// initialize low level resources
-	interrupt_init();
-	exception_init();
+    // initialize low level resourcces
+    interrupt_init();
+    exception_init();
 
 	printf ("Test data abort with a miss aligned access\n");
 	long l = 0;

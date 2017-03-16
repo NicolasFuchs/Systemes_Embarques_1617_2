@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+<<<<<<< HEAD
  * Project:	HEIA-FR / Embedded Systems 2 Laboratory
  *
  * Abstract: 	Interrupt handling demo and test program
@@ -22,20 +23,37 @@
  *
  * Author: 	<Nicolas Fuchs et Alan Sueur>
  * Date: 	<13.03.17>
+=======
+ * Project: HEIA-FR / Embedded Systems 2 Laboratory
+ *
+ * Abstract:    Interrupt handling demo and test program
+ *
+ * Purpose: Main module to demonstrate and to test the ARM Cortex-A8
+ *              low level interrupt handling.
+ *
+ * Author:  <Nicolas Fuchs et Alan Sueur>
+ * Date:    <13.03.17>
+ */
+
+/**
+ * initialization method
+>>>>>>> 703e908dc61d6387cfd59165e0ce9af99905897c
  */
 
 #include <stdio.h>
 #include "exception.h"
 #include "interrupt.h"
 
-static void exception_handler (enum interrupt_vectors vector, void* param) {
-	printf("exception (%d) : %s\n", vector, (char*) param);
-	while(vector==INT_PREFETCH);
+static void exception_handler (enum interrupt_vectors vector, void* param)
+{
+    printf("exception (%d): %s\n", vector, (char*)param);
+    while(vector==INT_PREFETCH);
 }
 
-void exception_init() {
-		interrupt_attach(INT_UNDEF,		exception_handler, "UNDEF exception raised");
-		interrupt_attach(INT_SVC,		exception_handler, "SVC exception raised");
-		interrupt_attach(INT_PREFETCH,	exception_handler, "PREFETCH exception raised");
-		interrupt_attach(INT_DATA,		exception_handler, "DATA exception raised");
-	}
+extern void exception_init()
+{
+    interrupt_attach(INT_UNDEF,    exception_handler, "UNDEF exception raised");
+    interrupt_attach(INT_SVC,      exception_handler, "SVC exception raised");
+    interrupt_attach(INT_PREFETCH, exception_handler, "PREFETCH exception raised");
+    interrupt_attach(INT_DATA,     exception_handler, "DATA exception raised");
+}
