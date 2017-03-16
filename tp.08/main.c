@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "interrupt.h"
+#include "exception.h"
 
 int main ()
 {
@@ -36,9 +38,13 @@ int main ()
 	printf ("Low Level Interrupt Handling on ARM Cortex-A8\n");
 	printf ("---------------------------------------------\n");
 
+	// initialize low level resources
+	interrupt_init();
+	exception_init();
+
 	printf ("Test data abort with a miss aligned access\n");
 	long l = 0;
-	long* pl = (long*)((char*)&l+1);
+	long* pl = (long*)((char*)&l+1);	// char* est utilisé pour augmenté l'adresse de 1 et non de 4
 	*pl = 2;
 
 	printf ("Test supervisor call instruction / software interrupt\n");

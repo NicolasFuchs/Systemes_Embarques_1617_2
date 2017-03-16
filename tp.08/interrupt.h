@@ -1,6 +1,7 @@
 #pragma once
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
+
 /**
  * Copyright 2017 University of Applied Sciences Western Switzerland / Fribourg
  * 
@@ -32,12 +33,12 @@
  * ARM interrupt vectors enumeration
  */
 enum interrupt_vectors {
-	INT_UNDEF,	///< undefined instruction
-	INT_SVC,  	///< supervisor call (software interrupt)
+	INT_UNDEF,		///< undefined instruction
+	INT_SVC,  		///< supervisor call (software interrupt)
 	INT_PREFETCH, 	///< prefetch abort (instruction prefetch)
 	INT_DATA,   	///< data abort (data access)
-	INT_IRQ,   	///< hardware interrupt request
-	INT_FIQ,   	///< hardware fast interrupt request
+	INT_IRQ,   		///< hardware interrupt request
+	INT_FIQ,   		///< hardware fast interrupt request
 	INT_NB_VECTORS};
 
 /**
@@ -47,7 +48,7 @@ enum interrupt_vectors {
  * @param param parameter specified while attaching the interrupt handler 
  */
 typedef void (*interrupt_handler_t) (
-	enum interrupt_vectors vector, 
+	enum interrupt_vectors vector,
 	void* param);
 
 
@@ -68,8 +69,8 @@ extern void interrupt_init();
  * @return execution status, 0 if sussess, -1 if already attached
  */
 extern int interrupt_attach (enum interrupt_vectors vector, 
-			     interrupt_handler_t routine, 
-			     void* param);
+		interrupt_handler_t routine,
+		void* param);
 
 
 /**
