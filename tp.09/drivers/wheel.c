@@ -20,8 +20,8 @@
  * Purpose:	This module implements a method to get state of the wheel
  *		of the HEIA-FR extension board of the Beaglebone black. 
  *
- * Author: 	Daniel Gachet
- * Date: 	21.11.2016
+ * Author: 	<authors>
+ * Date: 	<date>
  */
 
 #include <am335x_gpio.h>
@@ -42,17 +42,11 @@ static wheel_event_t wheel_event;
 static void wheel(enum am335x_gpio_modules module, uint32_t pin, void* param)
 {
 	(void)module; (void)pin; (void)param;
-	enum wheel_events event = WHEEL_RIGHT;
-	bool cha = am335x_gpio_get_state (CHA_GPIO, CHA_PIN);
-	bool chb = am335x_gpio_get_state (CHB_GPIO, CHB_PIN);
-	if (cha == chb) event = WHEEL_LEFT;
-	wheel_event(event);
 }
 
 static void button(enum am335x_gpio_modules module, uint32_t pin, void* param)
 {
 	(void)module; (void)pin; (void)param;
-	button_pressed();
 }
 
 // public method implementation -----------------------------------------------
