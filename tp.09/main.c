@@ -20,8 +20,8 @@
  * Purpose:	Main module to demonstrate and to test the TI AM335x
  *              hardware interrupt handling.
  *
- * Author: 	<authors>
- * Date: 	<date>
+ * Author: 	Nicolas Fuchs & Alan Sueur
+ * Date: 	27.03.2017
  */
 
 #include <stdlib.h>
