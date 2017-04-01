@@ -20,16 +20,16 @@
  * Purpose:	Main module to demonstrate and to test the TI AM335x
  *              hardware interrupt handling.
  *
- * Author: 	<Nicolas Fuchs & Alan Sueur>
- * Date: 	<27.03.2017>
+ * Author: 	<authors>
+ * Date: 	<date>
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <limits.h>
 #include <am335x_gpio.h>
+#include <limits.h>
 
 #include "interrupt.h"
 #include "exception.h"
@@ -40,32 +40,41 @@
 #include "thermo.h"
 #include "buzzer.h"
 
-#define DISPLAY_TEMP 0
-#define DISPLAY_MAX_TEMP 1
-#define DISPLAY_MIN_TEMP 2
-#define DISPLAY_MENU 3
-#define NB_MODES = 4
+#define LOWER_BOUND 28
+#define UPPER_BOUND 30
 
-#define MENU_TEMP 0
-#define MENU_TEMP_MAX 1
-#define MENU_TEMP_MIN 2
-
-struct program {
-	uint32_t program_state;
-	uint32_t temp_max;
-	uint32_t temp_min;
-	uint32_t temp;
-	uint32_t menu;
+enum modes {
+	DISPLAY,
+	HIGH_BOUND,
+	LOW_BOUND,
+	NB_OF_MODES
 };
-static struct program program;
 
-static void handle_incr(int* value, enum wheel_events event, int min, int max) {
-	if (event == WHEEL_LEFT && *value > min) {
+struct ctrl {
+	enum modes crt_mode;
+	int lo_bound;
+	int up_bound;
+	int temp;
+	bool is_bound_mode;
+	bool is_menu;
+};
+
+struct ctrl ctrl = {
+	.crt_mode = DISPLAY,
+	.lo_bound = LOWER_BOUND,
+	.up_bound = UPPER_BOUND,
+	.temp = 0,
+	.is_bound_mode = false,
+	.is_menu = false
+};
+
+static void wheel_ctrl(int* value, enum wheel_events event, int min, int max)	{
+	if(event == WHEEL_LEFT && *value > min)	{
 		(*value)--;
-	} else if (event == WHEEL_RIGHT && *value < max) {
+	}
+	else if(event == WHEEL_RIGHT && *value < max)	{
 		(*value)++;
 	}
-	printf("value = %d\n", *value);
 }
 
 static void intc2gpio_ih (enum intc_vectors vector, void* param) {
@@ -73,45 +82,52 @@ static void intc2gpio_ih (enum intc_vectors vector, void* param) {
 	am335x_gpio_interrupt_hanlder((enum am335x_gpio_modules)param);
 }
 
-static void seg7refresh_ih (enum timer_timers timer, void* param) {
+static void seg7refresh_ih(enum timer_timers timer, void* param) {
 	(void)timer; (void)param;
 	seg7_refresh_display();
 }
 
-static void thermo_read_ih (enum timer_timers timer, void* param) {
+static void thermo_read_ih(enum timer_timers timer, void* param) {
 	(void)timer; (void)param;
-	program.temp_max = thermo_get_limit(THERMO_T_HIGH);
-	program.temp_min = thermo_get_limit(THERMO_T_LOW);
-	program.temp = thermo_get_temp();
+	ctrl.lo_bound = thermo_get_limit(THERMO_T_LOW);
+	ctrl.up_bound = thermo_get_limit(THERMO_T_HIGH);
+	ctrl.temp = thermo_get_temp();
 }
 
 
 static void wheel_event_ih(enum wheel_events event) {
-	switch (program.program_state) {
-		case DISPLAY_MAX_TEMP:	handle_incr(&program.temp_max, event, INT_MIN, INT_MAX);
-								thermo_set_limit(THERMO_T_HIGH,program.temp_max);
-								break;
-		case DISPLAY_MIN_TEMP:	handle_incr(&program.temp_min, event, INT_MIN, INT_MAX);
-								thermo_set_limit(THERMO_T_LOW,program.temp_min);
-								break;
-		case DISPLAY_MENU:		int value = program.program_state;
-								handle_incr(&value, event, 0, NB_MODES-1);
-								program.program_state = value;
-								break;
+	(void)event;
+	if (!ctrl.is_bound_mode && !ctrl.is_menu)
+		return;
+	if (ctrl.is_menu) {
+		int value = ctrl.crt_mode;
+		wheel_ctrl(&value, event, 0, NB_OF_MODES -1);
+		ctrl.crt_mode = (enum modes) value;
+	} else {
+		switch(ctrl.crt_mode) {
+		case LOW_BOUND:
+			wheel_ctrl(&(ctrl.lo_bound), event, INT_MIN, INT_MAX);
+			thermo_set_limit(THERMO_T_LOW, ctrl.lo_bound);
+			break;
+		case HIGH_BOUND:
+			wheel_ctrl(&(ctrl.up_bound), event, INT_MIN, INT_MAX);
+			thermo_set_limit(THERMO_T_HIGH, ctrl.up_bound);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
 static void button_pressed_ih() {
-	switch (program.program_state) {
-		case DISPLAY_MAX_TEMP:
-		case DISPLAY_MIN_TEMP:
-		case DISPLAY_TEMP:	program.program_state = DISPLAY_MENU; break;
-		case DISPLAY_MENU:	switch (program.menu) {
-								case MENU_TEMP:		program.program_state = DISPLAY_TEMP; break;
-								case MENU_TEMP_MAX:	program.program_state = DISPLAY_MAX_TEMP; break;
-								case MENU_TEMP_MIN:	program.program_state = DISPLAY_MIN_TEMP; break;
-							}
-							break;
+	if (!ctrl.is_menu && !ctrl.is_bound_mode) {
+		ctrl.is_menu = true;
+	} else if (!ctrl.is_menu && ctrl.is_bound_mode) {
+		ctrl.is_bound_mode = false;
+		ctrl.is_menu = true;
+	} else {
+		ctrl.is_menu = false;
+		ctrl.is_bound_mode = true;
 	}
 }
 
@@ -123,7 +139,7 @@ static void thermo_alarm(bool is_alarm_on) {
 	}
 }
 
-int main () {
+int main() {
 	printf ("\n");
 	printf ("HEIA-FR - Embedded Systems 2 Laboratory\n");
 	printf ("TI AM335x Hardware Interrupt Handling Test Program\n");
@@ -137,10 +153,6 @@ int main () {
 	buzzer_init();
 	wheel_init(wheel_event_ih, button_pressed_ih);
 	thermo_init(thermo_alarm);
-
-	program.menu = 0;
-	program.program_state = DISPLAY_TEMP;
-
 	interrupt_enable();
 
 	timer_attach(TIMER_2,  10, seg7refresh_ih, 0);
@@ -152,17 +164,17 @@ int main () {
 	intc_attach (INTC_GPIO2A, intc2gpio_ih, (void*)AM335X_GPIO2);
 
 	/* main loop */
-	while(1);
-
-		if (program.menu == DISPLAY_MENU) {
-			seg7_display_value(program.program_state);
+	while(1) {
+		if (ctrl.is_menu) {
+			seg7_display_value(ctrl.crt_mode);
 		} else {
-			switch (program.program_state) {
-				case DISPLAY_TEMP:		seg7_display_value(program.temp); break;
-				case DISPLAY_MIN_TEMP:	seg7_display_value(program.temp_min); break;
-				case DISPLAY_MAX_TEMP:	seg7_display_value(program.temp_max); break;
+			switch(ctrl.crt_mode) {
+				case DISPLAY:	seg7_display_value(ctrl.temp); 		break;
+				case LOW_BOUND:	seg7_display_value(ctrl.lo_bound);	break;
+				case HIGH_BOUND:seg7_display_value(ctrl.up_bound);	break;
 			}
 		}
+	}
 
 	return 0;
 }
