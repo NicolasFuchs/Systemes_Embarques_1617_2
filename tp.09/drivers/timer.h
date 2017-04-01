@@ -1,6 +1,7 @@
 #pragma once
 #ifndef TIMER_H
 #define TIMER_H
+
 /**
  * Copyright 2017 University of Applied Sciences Western Switzerland / Fribourg
  * 
@@ -32,9 +33,7 @@
 /**
  * List of timers
  */
-enum timer_timers {TIMER_2, TIMER_3, TIMER_4,
-		   TIMER_5, TIMER_6, TIMER_7, 
-		   NB_OF_TIMERS};
+enum timer_timers {TIMER_2, TIMER_3, TIMER_4, TIMER_5, TIMER_6, TIMER_7, NB_OF_TIMERS};
 
 /**
  * Prototype of the interrupt service routine
@@ -60,11 +59,7 @@ extern void timer_init();
  * @param param parameter passed as argument to the ISR when called
  * @return execution status (0=success, -1=error)
  */
-extern int timer_attach(enum timer_timers timer, 
-			uint32_t period, 
-			timer_isr_t routine,
-			void* param);
-
+extern int timer_attach(enum timer_timers timer, uint32_t period, timer_isr_t routine, void* param);
 
 /**
  * method to reset the AM335x Timer and to detach the application specific 

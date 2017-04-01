@@ -1,6 +1,7 @@
 #pragma once
 #ifndef THERMO_H
 #define THERMO_H
+
 /**
  * Copyright 2017 University of Applied Sciences Western Switzerland / Fribourg
  * 

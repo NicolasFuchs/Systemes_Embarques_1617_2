@@ -1,6 +1,7 @@
 #pragma once
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
+
 /**
  * Copyright 2017 University of Applied Sciences Western Switzerland / Fribourg
  * 
@@ -27,17 +28,16 @@
  * Date: 	04.03.2017
  */
 
-
 /**
  * ARM interrupt vectors enumeration
  */
 enum interrupt_vectors {
-	INT_UNDEF,	///< undefined instruction
-	INT_SVC,  	///< supervisor call (software interrupt)
+	INT_UNDEF,		///< undefined instruction
+	INT_SVC,  		///< supervisor call (software interrupt)
 	INT_PREFETCH, 	///< prefetch abort (instruction prefetch)
 	INT_DATA,   	///< data abort (data access)
-	INT_IRQ,   	///< hardware interrupt request
-	INT_FIQ,   	///< hardware fast interrupt request
+	INT_IRQ,   		///< hardware interrupt request
+	INT_FIQ,   		///< hardware fast interrupt request
 	INT_NB_VECTORS};
 
 /**
@@ -46,17 +46,13 @@ enum interrupt_vectors {
  * @param vector interrupt vector
  * @param param parameter specified while attaching the interrupt handler 
  */
-typedef void (*interrupt_handler_t) (
-	enum interrupt_vectors vector, 
-	void* param);
-
+typedef void (*interrupt_handler_t) (enum interrupt_vectors vector, void* param);
 
 /**
  * Method to initialize low level resources of the microprocessor.
  * At least a 8KiB of memory will be allocated for each interrupt vector
  */
 extern void interrupt_init();
-
 
 /**
  * Method to attach an interrupt handler to the interrupt vector table 
@@ -67,10 +63,7 @@ extern void interrupt_init();
  *              specified interrupt handler
  * @return execution status, 0 if sussess, -1 if already attached
  */
-extern int interrupt_attach (enum interrupt_vectors vector, 
-			     interrupt_handler_t routine, 
-			     void* param);
-
+extern int interrupt_attach (enum interrupt_vectors vector, interrupt_handler_t routine, void* param);
 
 /**
  * Method to detach an interrupt handler from the interrupt vector table
@@ -79,12 +72,10 @@ extern int interrupt_attach (enum interrupt_vectors vector,
  */
 extern void interrupt_detach (enum interrupt_vectors vector);
 
-
 /**
  * Method to enable interrupt requests
  */
 extern void interrupt_enable();
-
 
 /**
  * Method to disable interrupt requests
@@ -92,6 +83,5 @@ extern void interrupt_enable();
  * @return value of cpsr before disabling interrupt requests
  */
 extern int interrupt_disable();
-
 
 #endif

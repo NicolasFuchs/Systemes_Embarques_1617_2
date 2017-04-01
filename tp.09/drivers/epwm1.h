@@ -1,6 +1,7 @@
 #pragma once
 #ifndef EPWM1_H
 #define EPWM1_H
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  * 

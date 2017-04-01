@@ -32,20 +32,17 @@
 #include "epwm1.h"
 #include "buzzer.h"
 
-void buzzer_init()
-{
+void buzzer_init() {
 	epwm1_init();
 	epwm1_set_duty(0);
 	epwm1_set_frequency(3800);
 }
 
-void buzzer_switch_on()
-{
+void buzzer_switch_on() {
 	epwm1_set_duty(50);		
 }
 
-void buzzer_switch_off() 
-{
+void buzzer_switch_off() {
 	epwm1_set_duty(0);		
 }
 

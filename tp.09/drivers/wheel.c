@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Project:	HEIA-FR / Embedded Systems 1 Laboratory
+ * Project:	HEIA-FR / Embedded Systems 2 Laboratory
  *
- * Abstract:	Wheel Device Driver
+ * Abstract: 	Interrupt handling demo and test program
  *
- * Purpose:	This module implements a method to get state of the wheel
- *		of the HEIA-FR extension board of the Beaglebone black. 
+ * Purpose:	Main module to demonstrate and to test the TI AM335x
+ *              hardware interrupt handling.
  *
- * Author: 	<authors>
- * Date: 	<date>
+ * Author: 	<Nicolas Fuchs & Alan Sueur>
+ * Date: 	<27.03.2017>
  */
 
 #include <am335x_gpio.h>
+#include <stdbool.h>
 
 #include "wheel.h"
 
@@ -39,37 +40,35 @@
 static wheel_button_pressed_t button_pressed;
 static wheel_event_t wheel_event;
 
-static void wheel(enum am335x_gpio_modules module, uint32_t pin, void* param)
-{
+static void wheel(enum am335x_gpio_modules module, uint32_t pin, void* param) {
 	(void)module; (void)pin; (void)param;
+	bool cha = am335x_gpio_get_state(CHA_GPIO, CHA_PIN);
+	bool chb = am335x_gpio_get_state(CHB_GPIO, CHB_PIN);
+
+	enum wheel_events event = WHEEL_RIGHT;
+	if (cha == chb) event = WHEEL_LEFT;
+	wheel_event(event);
 }
 
-static void button(enum am335x_gpio_modules module, uint32_t pin, void* param)
-{
+static void button(enum am335x_gpio_modules module, uint32_t pin, void* param) {
 	(void)module; (void)pin; (void)param;
+	button_pressed();
 }
 
 // public method implementation -----------------------------------------------
 
-void wheel_init(
-	wheel_event_t event_routine,
-	wheel_button_pressed_t button_routine)
-{
+void wheel_init(wheel_event_t event_routine, wheel_button_pressed_t button_routine) {
 	// initialize gpio 1 module
 	am335x_gpio_init(CHA_GPIO);
 	am335x_gpio_init(CHB_GPIO);
 	am335x_gpio_init(SW_GPIO);
 
 	// configure gpio pins as output 
-	am335x_gpio_setup_pin_in
-		(CHB_GPIO, CHB_PIN, AM335X_GPIO_PULL_NONE, true);
+	am335x_gpio_setup_pin_in(CHB_GPIO, CHB_PIN, AM335X_GPIO_PULL_NONE, true);
 
 	wheel_event = event_routine;
-	am335x_gpio_attach (CHA_GPIO, CHA_PIN, AM335X_GPIO_IRQ_BOTH, true, 
-			    wheel, 0);
+	am335x_gpio_attach (CHA_GPIO, CHA_PIN, AM335X_GPIO_IRQ_BOTH, true, wheel, 0);
 
 	button_pressed = button_routine;
-	am335x_gpio_attach (SW_GPIO, SW_PIN, AM335X_GPIO_IRQ_FALLING, true, 
-			    button, 0);
+	am335x_gpio_attach (SW_GPIO, SW_PIN, AM335X_GPIO_IRQ_FALLING, true, button, 0);
 }
-

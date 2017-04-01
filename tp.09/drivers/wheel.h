@@ -1,6 +1,7 @@
 #pragma once
 #ifndef WHEEL_H
 #define WHEEL_H
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -38,10 +39,7 @@ typedef void (*wheel_event_t)(enum wheel_events event);
  * method to initialize the resoures of the wheel
  * this method shall be called prior any other.
  */
-extern void wheel_init(
-	wheel_event_t event_routine,
-	wheel_button_pressed_t button_routine
-	);
+extern void wheel_init(wheel_event_t event_routine, wheel_button_pressed_t button_routine);
 
 #endif
 

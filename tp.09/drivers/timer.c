@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * This module is based on the software library developped by Texas Instruments
- * Incorporated - http://www.ti.com/ for its AM335x starter kit.
+ * Project:	HEIA-FR / Embedded Systems 2 Laboratory
  *
- * Project:	HEIA-FR / Embedded Systems 1+2 Laboratory
+ * Abstract: 	Interrupt handling demo and test program
  *
- * Abstract: 	AM335x DTTimer 
+ * Purpose:	Main module to demonstrate and to test the TI AM335x
+ *              hardware interrupt handling.
  *
- * Purpose:	This module implements basic services to drive the AM335x Timers
- *
- * Author: 	<authors>
- * Date: 	<date>
+ * Author: 	<Nicolas Fuchs & Alan Sueur>
+ * Date: 	<27.03.2017>
  */
 
 #include <stdint.h>
@@ -46,10 +44,10 @@
 #define IRQENABLE_OVF_IT_FLAG	(1<<1)
 
 // DMTimer TCLR register bit definition
-#define TCLR_ST			(1<<0)
-#define TCLR_AR			(1<<1)
-#define TCLR_CE			(1<<6)
-#define TCLR_TRG_OVF		(1<<10)
+#define TCLR_ST					(1<<0)
+#define TCLR_AR					(1<<1)
+#define TCLR_CE					(1<<6)
+#define TCLR_TRG_OVF			(1<<10)
 
 /**
  * DMTimer Register Definition (timer 2 to 7)
@@ -118,23 +116,22 @@ static const enum am335x_clock_timer_modules timer2clock[] = {
 
 /* -- Internal methods definition ------------------------------------------- */
 
-static void timer_isr(enum intc_vectors vector, void* param)
-{
+static void timer_isr(enum intc_vectors vector, void* param) {
 	(void)vector;
+	struct timer_isr_handlers* oref = (struct timer_isr_handlers*) param;
+	oref->ctrl->irqstatus = IRQSTATUS_OVF_IT_FLAG;
+	oref->routine(oref->timer, oref->param);
 }
 
 
 /* -- Public methods definition --------------------------------------------- */
 
-void timer_init()
-{
+void timer_init() {
 }
 
 /* -------------------------------------------------------------------------- */
 
-int timer_attach(enum timer_timers timer, uint32_t period, 
-		 timer_isr_t routine, void* param)
-{
+int timer_attach(enum timer_timers timer, uint32_t period, timer_isr_t routine, void* param) {
 	timer_init();
 
 	int status = -1;
@@ -158,6 +155,12 @@ int timer_attach(enum timer_timers timer, uint32_t period,
 	}
 
 	if (status == 0) {
+		ctrl->tmar = 0;
+		ctrl->tldr = -oref->period;
+		ctrl->tcrr = -oref->period;
+		ctrl->tidr = -oref->period;
+		ctrl->irqenable_set = IRQENABLE_OVF_IT_FLAG;
+		ctrl->tclr = TCLR_AR | TCLR_ST;
 	}
 
 	return status;
@@ -165,9 +168,13 @@ int timer_attach(enum timer_timers timer, uint32_t period,
 
 /* ------------------------------------------------------------------------- */
 
-void timer_detach(enum timer_timers timer)
-{
+void timer_detach(enum timer_timers timer) {
 	if (timer >= NB_OF_TIMERS) return;
+
+	volatile struct timer_ctrl* ctrl = timer_ctrl[timer];
+	ctrl->irqenable_set = IRQENABLE_OVF_IT_FLAG;
+	ctrl->tiocp_cfg = TIOCP_CFG_SOFTRESET;
+
 
 	intc_detach(timer2intc[timer]);
 
@@ -177,4 +184,3 @@ void timer_detach(enum timer_timers timer)
 	oref->period = 0;
 	oref->ctrl = 0;
 }
-

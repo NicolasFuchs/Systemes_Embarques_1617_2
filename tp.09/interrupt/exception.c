@@ -24,14 +24,12 @@
 #include <stdio.h>
 #include "interrupt.h"
 
-static void exception_handler(enum interrupt_vectors vector, void* param)
-{
+static void exception_handler(enum interrupt_vectors vector, void* param) {
 	printf ("ARM Exception(%d): %s\n", vector, (char*)param);
 	while (vector == INT_PREFETCH);
 }
 
-void exception_init()
-{
+void exception_init() {
 	interrupt_attach (INT_UNDEF,    exception_handler, "undefined instruction");
 	interrupt_attach (INT_SVC,      exception_handler, "software interrupt");
 	interrupt_attach (INT_PREFETCH, exception_handler, "prefetch abort");

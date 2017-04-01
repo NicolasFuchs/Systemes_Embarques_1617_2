@@ -1,6 +1,7 @@
 #pragma once
 #ifndef INTC_H
 #define INTC_H
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  * 
@@ -33,7 +34,6 @@
  */
 
 #include <stdbool.h>
-
 
 /**
  * List of available interrupt sources attached to the INTC.
@@ -74,13 +74,11 @@ enum intc_vectors {
  */
 typedef void (*intc_service_routine_t) (enum intc_vectors vector, void* param);
 
-
 /**
  * initialization method
  * should be called prior any other method of this module
  */
 extern void intc_init();
-
 
 /**
  * method to attach an application specific interrupt service routine to 
@@ -93,10 +91,7 @@ extern void intc_init();
  *
  * @return execution status: 0 <=> success, -1 <=> error
  */
-extern int intc_attach (
-	enum intc_vectors vector, 
-	intc_service_routine_t routine, 
-	void* param);
+extern int intc_attach (enum intc_vectors vector, intc_service_routine_t routine, void* param);
 
 /**
  * method to detach application specific interrupt service routine from the 
@@ -105,7 +100,6 @@ extern int intc_attach (
  * @param vector interrupt vector from which the application ISR should be detached
  */
 extern void intc_detach (enum intc_vectors vector);
-
 
 /**
  * method to force/simulate an interrupt request

@@ -1,6 +1,7 @@
 #pragma once
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  * 

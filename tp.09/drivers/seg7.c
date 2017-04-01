@@ -37,8 +37,8 @@
 #define DIG_ALL		(DIG1 | DIG2)
 
 #define DP_GPIO		AM335X_GPIO2
-#define DP1		(1<<4)
-#define DP2		(1<<5)
+#define DP1			(1<<4)
+#define DP2			(1<<5)
 #define DP_ALL		(DP1 | DP2)
 
 #define SEG_GPIO	AM335X_GPIO0
@@ -90,23 +90,22 @@ static const struct gpio_init {
 */
 static const uint32_t seg7[] = {
 	(SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F 	    	), // 0
-	(        SEG_B + SEG_C        			    	), // 1
-     	(SEG_A + SEG_B                 + SEG_E + SEG_D + SEG_G 	), // 2
-     	(SEG_A + SEG_B + SEG_C + SEG_D                 + SEG_G 	), // 3
-     	(        SEG_B + SEG_C                 + SEG_F + SEG_G 	), // 4
-     	(SEG_A         + SEG_C + SEG_D         + SEG_F + SEG_G 	), // 5
-     	(SEG_A         + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G 	), // 6
-     	(SEG_A + SEG_B + SEG_C				    	), // 7
-     	(SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G 	), // 8
-     	(SEG_A + SEG_B + SEG_C + SEG_D + SEG_F + SEG_G	    	), // 9
-     	(SEG_A + SEG_B + SEG_C + SEG_E + SEG_F + SEG_G	    	), // A
-     	(                SEG_C + SEG_D + SEG_E + SEG_F + SEG_G 	), // b
-     	(SEG_A                 + SEG_D + SEG_E + SEG_F         	), // C
-     	(        SEG_B + SEG_C + SEG_D + SEG_E +         SEG_G 	), // d
-     	(SEG_A                 + SEG_D + SEG_E + SEG_F + SEG_G 	), // E
-     	(SEG_A                         + SEG_E + SEG_F + SEG_G 	), // F
-     	(0							),
-
+	(        SEG_B + SEG_C        			    			), // 1
+    (SEG_A + SEG_B                 + SEG_E + SEG_D + SEG_G 	), // 2
+    (SEG_A + SEG_B + SEG_C + SEG_D                 + SEG_G 	), // 3
+    (        SEG_B + SEG_C                 + SEG_F + SEG_G 	), // 4
+    (SEG_A         + SEG_C + SEG_D         + SEG_F + SEG_G 	), // 5
+    (SEG_A         + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G 	), // 6
+    (SEG_A + SEG_B + SEG_C				    				), // 7
+    (SEG_A + SEG_B + SEG_C + SEG_D + SEG_E + SEG_F + SEG_G 	), // 8
+    (SEG_A + SEG_B + SEG_C + SEG_D + SEG_F + SEG_G	    	), // 9
+    (SEG_A + SEG_B + SEG_C + SEG_E + SEG_F + SEG_G	    	), // A
+    (                SEG_C + SEG_D + SEG_E + SEG_F + SEG_G 	), // b
+    (SEG_A                 + SEG_D + SEG_E + SEG_F         	), // C
+    (        SEG_B + SEG_C + SEG_D + SEG_E +         SEG_G 	), // d
+    (SEG_A                 + SEG_D + SEG_E + SEG_F + SEG_G 	), // E
+    (SEG_A                         + SEG_E + SEG_F + SEG_G 	), // F
+    (0														),
 };
 
 // 7-segment display: digit value
@@ -124,8 +123,7 @@ static struct digit {
 // implementation of public methods
 // -----------------------------------------------------------------------------
 
-void seg7_init()
-{
+void seg7_init() {
 	// initialize gpio modules
 	am335x_gpio_init(DIG_GPIO);
 	am335x_gpio_init(DP_GPIO);
@@ -142,8 +140,7 @@ void seg7_init()
 
 // -----------------------------------------------------------------------------
 
-void seg7_display_value (int value)
-{
+void seg7_display_value (int value) {
 	// test for negative values
 	display[1].dot &= ~DP1;
 	if (value < 0) {
@@ -160,14 +157,13 @@ void seg7_display_value (int value)
 
 // -----------------------------------------------------------------------------
 
-void seg7_refresh_display()
-{
+void seg7_refresh_display() {
 	static unsigned digit = 0;
 
 	// turn-off all segments & digits
-	am335x_gpio_change_states(DIG_GPIO, DIG_ALL, false);
 	am335x_gpio_change_states(DP_GPIO,  DP_ALL,  false);
 	am335x_gpio_change_states(SEG_GPIO, SEG_ALL, false);
+	am335x_gpio_change_states(DIG_GPIO, DIG_ALL, false);
 
 	am335x_gpio_change_states(DP_GPIO,  display[digit].dot,   true);
 	am335x_gpio_change_states(SEG_GPIO, display[digit].seg7,  true);
@@ -178,13 +174,10 @@ void seg7_refresh_display()
 
 // -----------------------------------------------------------------------------
 
-void seg7_display_dot (bool state)
-{
-	if (state) 
+void seg7_display_dot (bool state) {
+	if (state) {
 		display[1].dot |= DP2;
-	else
+	} else {
 		display[1].dot &= ~DP2;
+	}
 }
-
-
-

@@ -89,8 +89,8 @@ struct epwm_ctrl {
 
 // define am335x pwmss controller registers
 struct pwm_ctrl {
-	uint32_t 	 pwmss[64];
-	uint32_t	 ecap[32];
+	uint32_t 	 	 pwmss[64];
+	uint32_t	 	 ecap[32];
 	uint32_t         eqep[32];
 	struct epwm_ctrl epwm;
 };
@@ -99,13 +99,13 @@ struct pwm_ctrl {
 #define SYSCLK		(100000000) 
 
 // TB register definition
-#define TB_PRD_MAX	(65535)
+#define TB_PRD_MAX		(65535)
 #define TB_SYNC_DISABLE	(3<<4)
 #define TB_HSDIV_SHIFT	(7)
 #define TB_CLKDIV_SHIFT	(10)
 
 // AQ register definition
-#define AQ_ZRO_SET	(2<<0)
+#define AQ_ZRO_SET		(2<<0)
 #define AQ_ZRO_CLEAR	(1<<0)
 #define AQ_CAU_CLEAR	(1<<4)
 
@@ -173,8 +173,7 @@ struct divider {
 	uint32_t hsdiv;		// high speed clock prescale bits
 };
 
-static struct divider get_divider(uint32_t f)
-{
+static struct divider get_divider(uint32_t f) {
 	uint32_t prd = (f > 0) ? (SYSCLK / f) : 0;
 	uint32_t div = (prd + TB_PRD_MAX - 1) / TB_PRD_MAX;
 
@@ -193,8 +192,7 @@ static struct divider get_divider(uint32_t f)
 // implementation of public methods
 // -----------------------------------------------------------------------------
 
-void epwm1_init()
-{
+void epwm1_init() {
 	am335x_clock_enable_epwm_module (AM335X_CLOCK_EPWM1);
 	am335x_mux_setup_epwm_pins (AM335X_MUX_EPWM1);
 
@@ -209,8 +207,7 @@ void epwm1_init()
 
 // -----------------------------------------------------------------------------
 
-void epwm1_set_frequency(uint32_t freq)
-{
+void epwm1_set_frequency(uint32_t freq) {
 	if (freq > SYSCLK) return;
 
 	// build divider attributes
@@ -231,8 +228,7 @@ void epwm1_set_frequency(uint32_t freq)
 
 // -----------------------------------------------------------------------------
 
-void epwm1_set_duty(uint32_t duty)
-{
+void epwm1_set_duty(uint32_t duty) {
 	if (duty >= 100) {
 		duty = 100;
 		pwm->epwm.cmpa = 0;
@@ -248,4 +244,3 @@ void epwm1_set_duty(uint32_t duty)
 	}
 	pwm_duty = duty;
 }
-

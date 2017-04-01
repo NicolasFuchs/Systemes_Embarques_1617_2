@@ -1,6 +1,7 @@
 #pragma once
 #ifndef SEG7_H
 #define SEG7_H
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  *
@@ -36,7 +37,6 @@
  */
 extern void seg7_init();
 
-
 /**
  * method to display a value [-99..99] on the the 7-segments display
  * for negative value, a dot will be displayed.
@@ -45,12 +45,10 @@ extern void seg7_init();
  */
 extern void seg7_display_value (int value);
 
-
 /**
  * method to refresh the 7-segment display
  */
 extern void seg7_refresh_display();
-
 
 /**
  * method to display the dot as comma between dig1 and dig2
@@ -60,5 +58,3 @@ extern void seg7_refresh_display();
 extern void seg7_display_dot (bool state);
 
 #endif
-
-

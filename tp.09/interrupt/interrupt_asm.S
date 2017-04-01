@@ -23,26 +23,26 @@
 
 /*-- local symbols --------------------------------------------------------- */
 
-#define INT_UNDEF	0	// undefined instruction
-#define INT_SWI		1 	// software interrupt
+#define INT_UNDEF		0	// undefined instruction
+#define INT_SWI			1 	// software interrupt
 #define INT_PREFETCH	2 	// prefetch abort (instruction prefetch)
-#define INT_DATA	3 	// data abort (data access)
-#define INT_IRQ		4	// hardware interrupt request
-#define INT_FIQ		5	// hardware fast interrupt request
+#define INT_DATA		3 	// data abort (data access)
+#define INT_IRQ			4	// hardware interrupt request
+#define INT_FIQ			5	// hardware fast interrupt request
 
 #ifdef FAST_HANDLER
 #define AM335X_OCMC_SRAM_BASE_ADDR	(0x40300000)
-#define VECTOR_BASE_ADDR 		(AM335X_OCMC_SRAM_BASE_ADDR)
-#define STACK_BASE			(AM335X_OCMC_SRAM_BASE_ADDR + 0x1000)
+#define VECTOR_BASE_ADDR 			(AM335X_OCMC_SRAM_BASE_ADDR)
+#define STACK_BASE					(AM335X_OCMC_SRAM_BASE_ADDR + 0x1000)
 
-#define IRQ_STACK_TOP			(STACK_BASE + 0x8000)
-#define FIQ_STACK_TOP			(STACK_BASE + 0x6000)
-#define ABORT_STACK_TOP			(STACK_BASE + 0x4000)
-#define UNDEF_STACK_TOP			(STACK_BASE + 0x2000)
+#define IRQ_STACK_TOP				(STACK_BASE + 0x8000)
+#define FIQ_STACK_TOP				(STACK_BASE + 0x6000)
+#define ABORT_STACK_TOP				(STACK_BASE + 0x4000)
+#define UNDEF_STACK_TOP				(STACK_BASE + 0x2000)
 
 #else
-#define VECTOR_BASE_ADDR 		vector_table_start
-#define STACK_BASE			stacks
+#define VECTOR_BASE_ADDR 			vector_table_start
+#define STACK_BASE					stacks
 	.bss
 	.align 4
 und_s:	.space	0x2000
@@ -68,13 +68,13 @@ IRQ_STACK_TOP:
  */
 .macro flih_1st_stage offset, vector
 	nop	
-	.if \offset != 0		// adjust return address
-	sub	lr, #\offset		// only if necessary
+	.if \offset != 0			// adjust return address
+	sub	lr, #\offset			// only if necessary
 	.endif
 	stmfd   sp!, {r0-r12,lr}	// save context and return address
-	mov	r1, lr			// indicate return address
-	mov	r0, #\vector		// indicate vector number
-	ldr	r2, flih		// process interrupt
+	mov	r1, lr					// indicate return address
+	mov	r0, #\vector			// indicate vector number
+	ldr	r2, flih				// process interrupt
 	blx	r2
 	ldmfd   sp!,{r0-r12,pc}^	// restore the context (pc & cpsr)
 .endm

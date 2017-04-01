@@ -1,6 +1,7 @@
 #pragma once
 #ifndef BUZZER_H
 #define BUZZER_H
+
 /**
  * Copyright 2016 University of Applied Sciences Western Switzerland / Fribourg
  * 

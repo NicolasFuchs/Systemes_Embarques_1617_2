@@ -15,10 +15,13 @@
  * 
  * Project:	HEIA-FR / Embedded Systems 2 Laboratory
  *
- * Abstract:	INTC - AM335x Interrupt Controller 
+ * Abstract: 	Interrupt handling demo and test program
  *
- * Author: 	<authors>
- * Date: 	<date>
+ * Purpose:	Main module to demonstrate and to test the TI AM335x
+ *              hardware interrupt handling.
+ *
+ * Author: 	<Nicolas Fuchs & Alan Sueur>
+ * Date: 	<27.03.2017>
  */
 
 #include <string.h>
@@ -29,25 +32,23 @@
 
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
-/**
- * INTC controller definition
- */
+// INTC controller definition
 struct intc_ctrl {
-	uint32_t revision;	// 00
-	uint32_t res1[3];	// 04-0c
-	uint32_t sysconfig;	// 10
-	uint32_t sysstatus;	// 14
-	uint32_t res2[10];	// 18-3c
-	uint32_t sir_irq;	// 40
-	uint32_t sir_fiq;	// 44
-	uint32_t control;	// 48
+	uint32_t revision;		// 00
+	uint32_t res1[3];		// 04-0c
+	uint32_t sysconfig;		// 10
+	uint32_t sysstatus;		// 14
+	uint32_t res2[10];		// 18-3c
+	uint32_t sir_irq;		// 40
+	uint32_t sir_fiq;		// 44
+	uint32_t control;		// 48
 	uint32_t protection;	// 4c
-	uint32_t idle;		// 50
-	uint32_t res3[3];	// 54-5c
+	uint32_t idle;			// 50
+	uint32_t res3[3];		// 54-5c
 	uint32_t irq_priority;	// 60
 	uint32_t fiq_priority;	// 64
-	uint32_t threshold;	// 68
-	uint32_t res4[5];	// 6c-7c
+	uint32_t threshold;		// 68
+	uint32_t res4[5];		// 6c-7c
 	struct {
 		uint32_t itr;
 		uint32_t mir;
@@ -82,17 +83,25 @@ static bool is_initialized = false;
  * get the highest pending interrupt vector and to call the related service
  * routine.
  */
-void intc_irq_isr(enum interrupt_vectors int_vector, void* param)
-{
+void intc_irq_isr(enum interrupt_vectors int_vector, void* param) {
 	(void)param; (void)int_vector;// unused arguments
+
+	uint32_t vector = intc->sir_irq & 0x7f;
+
+	if (handlers[vector].routine != 0) {
+		handlers[vector].routine(vector, handlers[vector].param);
+	} else {
+		intc->flags[vector/32].mir_set = 1<<(vector%32);
+	}
+
+	intc->control = 0x1;
 
 }
 
 
 /*-- public methods -------------------------------------------------------- */
 
-void intc_init()
-{
+void intc_init() {
 	if (is_initialized) return;
 
 	memset (handlers, '\0', sizeof(handlers));
@@ -108,40 +117,54 @@ void intc_init()
 	intc->threshold = 0xff;
 
 	// mask all interrupt request lines
-	for (int i=ARRAY_SIZE(intc->flags)-1; i>=0; i--) {
+	for (int i = ARRAY_SIZE(intc->flags)-1; i >= 0; i--) {
 		intc->flags[i].mir = -1;
 		intc->flags[i].mir_set = -1;
 		intc->flags[i].isr_clear = -1;
 	}
 	// 
-	for (int i=ARRAY_SIZE(intc->ilr)-1; i>=0; i--) {
+	for (int i = ARRAY_SIZE(intc->ilr)-1; i >= 0; i--) {
 		intc->ilr[i] = 0;
 	}
 
-	is_initialized=true;
+	is_initialized = true;
 }
 
 /* ------------------------------------------------------------------------- */
 
-int intc_attach (
-	enum intc_vectors vector, 
-	intc_service_routine_t routine, 
-	void* param)
-{
+int intc_attach (enum intc_vectors vector, intc_service_routine_t routine, void* param) {
+	intc_init();
 	int status = -1;
+	if (vector < INTC_NB_OF_VECTORS && handlers[vector].routine == 0) {
+		handlers[vector].routine = routine;
+		handlers[vector].param = param;
+
+		intc->ilr[vector] = 0;
+		intc->flags[vector/32].mir_clear = (1<<(vector%32));
+		status = 0;
+	}
 
 	return status;
 }
 
 /* ------------------------------------------------------------------------- */
 
-void intc_detach (enum intc_vectors vector)
-{
+void intc_detach (enum intc_vectors vector) {
+	if (vector < INTC_NB_OF_VECTORS) {
+		intc->flags[vector/32].mir_set = (1<<(vector%32));
+		handlers[vector].routine = 0;
+		handlers[vector].param = 0;
+	}
 }
 
 /* ------------------------------------------------------------------------- */
 
-void intc_force (enum intc_vectors vector, bool force)
-{
+void intc_force (enum intc_vectors vector, bool force) {
+	if (vector < INTC_NB_OF_VECTORS) {
+		if (force) {
+			intc->flags[vector/32].isr_set = (1<<(vector%32));
+		} else {
+			intc->flags[vector/32].isr_clear = (1<<(vector%32));
+		}
+	}
 }
-

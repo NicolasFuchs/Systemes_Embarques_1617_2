@@ -40,11 +40,10 @@
  */
 extern void interrupt_init_1st_stage(void(*)(enum interrupt_vectors));
 
-
 /** 
   second-level interrupt handler (slih)
 */
-struct slih{
+struct slih {
     interrupt_handler_t routine;
     void* param;
 };
@@ -55,8 +54,7 @@ static struct slih slih[INT_NB_VECTORS];
   First-level interrupt handler (2nd stage) written in C and called
   from first-level interrupt handler (1st stage) written in assembler
  */
-void flih (enum interrupt_vectors vector) 
-{
+void flih (enum interrupt_vectors vector) {
     struct slih* handler = &slih[vector];
     if (handler->routine != 0) {
         handler->routine (vector, handler->param);
@@ -69,17 +67,12 @@ void flih (enum interrupt_vectors vector)
 
 /* Public methods ------------------------------------------------------------*/
 
-void interrupt_init() 
-{
+void interrupt_init() {
 	interrupt_init_1st_stage(flih);
 	memset (slih, 0, sizeof(slih));
 }
 
-int interrupt_attach (
-	enum interrupt_vectors vector, 
-	interrupt_handler_t routine,
-        void* param) 
-{
+int interrupt_attach (enum interrupt_vectors vector, interrupt_handler_t routine, void* param) {
 	int status = -1;
 	struct slih* handler = &slih[vector];
 	if ((vector < INT_NB_VECTORS) && (handler->routine == 0)) {
@@ -90,8 +83,7 @@ int interrupt_attach (
 	return status;
 }
 
-void interrupt_detach (enum interrupt_vectors vector) 
-{
+void interrupt_detach (enum interrupt_vectors vector) {
 	if (vector < INT_NB_VECTORS) {
 		slih[vector].routine = 0;
 		slih[vector].param = 0;
