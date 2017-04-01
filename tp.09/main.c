@@ -97,8 +97,6 @@ static void thermo_read_ih(enum timer_timers timer, void* param) {
 
 static void wheel_event_ih(enum wheel_events event) {
 	(void)event;
-	if (!ctrl.is_bound_mode && !ctrl.is_menu)
-		return;
 	if (ctrl.is_menu) {
 		int value = ctrl.crt_mode;
 		wheel_ctrl(&value, event, 0, NB_OF_MODES -1);
@@ -112,8 +110,6 @@ static void wheel_event_ih(enum wheel_events event) {
 		case HIGH_BOUND:
 			wheel_ctrl(&(ctrl.up_bound), event, INT_MIN, INT_MAX);
 			thermo_set_limit(THERMO_T_HIGH, ctrl.up_bound);
-			break;
-		default:
 			break;
 		}
 	}
@@ -159,9 +155,9 @@ int main() {
 	timer_attach(TIMER_3, 500, thermo_read_ih, 0);
 
 	// attach gpio interrupt handler to intc_gpio1a interrupt vector
-	intc_attach (INTC_GPIO0A, intc2gpio_ih, (void*)AM335X_GPIO0);
-	intc_attach (INTC_GPIO1A, intc2gpio_ih, (void*)AM335X_GPIO1);
-	intc_attach (INTC_GPIO2A, intc2gpio_ih, (void*)AM335X_GPIO2);
+	intc_attach(INTC_GPIO0A, intc2gpio_ih, (void*)AM335X_GPIO0);
+	intc_attach(INTC_GPIO1A, intc2gpio_ih, (void*)AM335X_GPIO1);
+	intc_attach(INTC_GPIO2A, intc2gpio_ih, (void*)AM335X_GPIO2);
 
 	/* main loop */
 	while(1) {
@@ -169,9 +165,9 @@ int main() {
 			seg7_display_value(ctrl.crt_mode);
 		} else {
 			switch(ctrl.crt_mode) {
-				case DISPLAY:	seg7_display_value(ctrl.temp); 		break;
 				case LOW_BOUND:	seg7_display_value(ctrl.lo_bound);	break;
 				case HIGH_BOUND:seg7_display_value(ctrl.up_bound);	break;
+				case DISPLAY:	seg7_display_value(ctrl.temp); 		break;
 			}
 		}
 	}
