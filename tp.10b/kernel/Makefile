@@ -2,7 +2,7 @@ EXEC=app
 SRCS=$(wildcard *.c) 
 ASRC=$(wildcard *.S)
 
-LIBDIRS=interrupt drivers ff12b
+LIBDIRS=interrupt drivers ff12b vfs_gac
 
 CFLAGS+=-DINTC_EN=1
 
