@@ -1,11 +1,5 @@
-EXEC=app
-SRCS=$(wildcard *.c) 
-ASRC=$(wildcard *.S)
+DIRS=$(filter-out Makefile assignment, $(wildcard *))
 
-LIBDIRS=interrupt drivers ff12b
-
-CFLAGS+=-DINTC_EN=1
-
-# Include the standard makefile for the embedded systems 1 & 2 labs 
-include $(LMIBASE)/bbb/make/bbb.mk
+all clean install:
+	for dir in $(DIRS); do $(MAKE) $@ -C $$dir; done
 
