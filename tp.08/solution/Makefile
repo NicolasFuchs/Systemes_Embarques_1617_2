@@ -2,10 +2,12 @@ EXEC=app
 SRCS=$(wildcard *.c) 
 ASRC=$(wildcard *.S)
 
-LIBDIRS=interrupt drivers ff12b vfs_gac
-
-CFLAGS+=-DINTC_EN=1
-
+ifneq ($(DEBUG),)
+CFLAGS+=-DDEBUG
+endif
+ifneq ($(FAST_HANDLER),)
+CFLAGS+=-DFAST_HANDLER
+endif
 # Include the standard makefile for the embedded systems 1 & 2 labs 
 include $(LMIBASE)/bbb/make/bbb.mk
 
