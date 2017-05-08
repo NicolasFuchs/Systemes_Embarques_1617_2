@@ -1,17 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "kernel.h"
 
-void yield() 
-{
-}
-
-
-void delay(int t)
-{
-	(void)t;
-}
 
 int main(int argc, char*argv[]) {
+
+	printf("%s\n", );
 
 	printf ("argc=%d\n", argc);
 	for (int i=0; i<argc; i++)
@@ -28,4 +22,3 @@ int main(int argc, char*argv[]) {
 	}
 	return 0;
 }
-
