@@ -85,6 +85,7 @@ bool 		shell_kill(shell_cmd* me, int argc, char** args);
 bool 		shell_cd(shell_cmd* me, int argc, char** args);
 bool 		shell_cat(shell_cmd* me, int argc, char** args);
 bool		shell_echo(shell_cmd* me, int argc, char** args);
+bool		shell_run(shell_cmd* me, int argc, char** args);
 
 // --- local datas ----------------------------------
 static shell_cmd cmd_list[]={
@@ -99,6 +100,7 @@ static shell_cmd cmd_list[]={
 		{"cd","cd\tpath\n\npath\t\tthe path to the new directory","Change current directory to new one.",shell_cd},
 		{"cat","cat\tfilename\n\nfilename\t\tthe filename we want to display","Dispay file content.",shell_cat},
 		{"echo","echo\ttext\necho\tfilename\t<\ttext\n","Write in file.",shell_echo},
+		{"run","run\texename\nexename\t\texecutable process name we want to run.","Execute a program from disk.",shell_run},
 
 };
 
@@ -400,16 +402,38 @@ bool shell_echo(shell_cmd* me, int argc, char** args)
 	char* path = vfs_get_current_path_string();
 	memset(buffer_shell, 0, sizeof(char)*MAX_FILE_MAME_SIZE);
 
-	if(path && strlen(path)>0) strcpy(buffer_shell, path);
-	strcpy(buffer_shell+strlen(buffer_shell), "/");
+	if(path && strlen(path)>0){
+		strcpy(buffer_shell, path);
+		strcpy(buffer_shell+strlen(buffer_shell), "/");
+	}
 	strcpy(buffer_shell+strlen(buffer_shell), args[1]);
 
 	FILE* f = fopen(buffer_shell, "wa");
 	uint32_t written = fwrite((const char*)buff, sizeof(char), strlen(buff), f);
-	fclose(f);
+	if(f) fclose(f);
 
 	if(written != strlen(buff)) return false;
 
+	return true;
+}
+
+bool shell_run(shell_cmd* me, int argc, char** args)
+{
+	(void)me;
+	if(argc < 2) return false;
+
+	char* path = vfs_get_current_path_string();
+	memset(buffer_shell, 0, sizeof(char)*MAX_FILE_MAME_SIZE);
+
+	if(path && strlen(path)>0) strcpy(buffer_shell, path);
+	strcpy(buffer_shell+strlen(buffer_shell), "/");
+	strcpy(buffer_shell+strlen(buffer_shell), args[1]);
+
+	char** argv = calloc(1, sizeof(char*)*(argc-1));
+	for(int i = 1; i < argc; i++) argv[i-1] = args[i];
+
+	kernel_exec(buffer_shell, args[1], argc-1, argv);
+	free(argv);
 	return true;
 }
 

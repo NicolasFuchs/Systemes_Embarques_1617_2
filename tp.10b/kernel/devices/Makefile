@@ -5,7 +5,7 @@ ASRC=$(wildcard *.S)
 
 # Include the standard makefile for the embedded systems 1 & 2 labs 
 VPATH=
-EXTRA_CFLAGS=-I../utils -I../shell -I../ -I../kernel -I../system
+EXTRA_CFLAGS=-I../utils -I../shell -I../ -I../kernel -I../system -I../file_system -I../drivers
 
 include $(LMIBASE)/bbb/make/bbb_lib.mk
 

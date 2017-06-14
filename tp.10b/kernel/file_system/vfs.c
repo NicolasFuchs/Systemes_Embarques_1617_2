@@ -627,7 +627,8 @@ extern void vfs_cd(char* new_path)
 extern struct file_ops* vfs_get_file_ops(const char* name, const char* *base)
 {
 	*base = name;
-	return current_node->fops;
+	dnode_t* node = vfs_get_node(name, true);
+	return node->fops;
 }
 
 // find and return directory operations and base path
