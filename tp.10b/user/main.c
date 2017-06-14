@@ -1,11 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "kernel.h"
+#include "syscall.h"
+
+void yield()
+{
+	syscall(0,0,0,0, SYSCALL_YIELD);
+}
 
 
-int main(int argc, char*argv[]) {
+void delay(int t)
+{
+	(void)t;
+}
 
-	printf("%s\n", );
+
+int main(int argc, char*argv[])
+{
+	printf("\n\n");
+	printf("HEIA-FR : Mini-OS - Process - "__DATE__" - " __TIME__ "\n");
+	printf("-------------------------------------------------------------------\n");
 
 	printf ("argc=%d\n", argc);
 	for (int i=0; i<argc; i++)

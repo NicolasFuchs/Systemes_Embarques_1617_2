@@ -34,8 +34,14 @@
 #include "interrupt.h"
 #include "exception.h"
 
-int main ()
-{
+void thread (void* param) {
+	printf();
+	while (1) {
+		kernel_thread_yield();
+	}
+}
+
+int main () {
 	printf ("\n");
 	printf ("HEIA-FR - Embedded Systems 2 Laboratory\n");
 	printf ("Low Level Interrupt Handling on ARM Cortex-A8\n");

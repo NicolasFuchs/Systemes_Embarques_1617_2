@@ -9,7 +9,6 @@ MEMORY {
     M3SHUMEM : o = 0x44D00000,  l = 0x00004000  /* 16KB M3 Shared Unified Code Space */
     M3SHDMEM : o = 0x44D80000,  l = 0x00002000  /* 8KB M3 Shared Data Memory */
     DDR0 :     o = 0x80000000,  l = 0x20000000  /* 512MB external DDR Bank 0 */
-    DDR0_dma : o = 0x80f00000,  l = 0x00100000  /* 1MB on external DDR Bank 0 */
 }
 
 SECTIONS
@@ -55,8 +54,4 @@ SECTIONS
 	_stack_bottom = ORIGIN(DDR0) + LENGTH(DDR0) - 0x80000;
 	__c_stack_top__ = ORIGIN(DDR0) + LENGTH(DDR0);
 
-	.dmasafe :
-	{
-		*(.dmasafe)
-	} >DDR0_dma
 } 
