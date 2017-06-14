@@ -78,7 +78,7 @@ void interrupt_init()
 int interrupt_attach (
 	enum interrupt_vectors vector, 
 	interrupt_handler_t routine,
-        void* param) 
+    void* param)
 {
 	int status = -1;
 	struct slih* handler = &slih[vector];

@@ -1,7 +1,10 @@
-SRCS=$(wildcard *.c) unicode.c
+SRCS=$(wildcard *.c)
 ASRC=$(wildcard *.S)
 
-VPATH=option
+LIBDIRS=../utils
+
 # Include the standard makefile for the embedded systems 1 & 2 labs 
-EXTRA_CFLAGS=-Wno-unused-function -I../drivers -I../interrupt -I../
+VPATH=
+EXTRA_CFLAGS=-I../ff12b
+
 include $(LMIBASE)/bbb/make/bbb_lib.mk

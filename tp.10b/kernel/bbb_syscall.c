@@ -20,9 +20,8 @@
  * Purpose:	This module implements all the required newlib system calls
  *
  * Author: 	Daniel Gachet
- * Date: 	03.04.2017
+ * Date: 	22.05.2017
  */
-
 
 /* GNU ARM Toolchain & newlib: system calls */
 #include <stdlib.h>
@@ -33,39 +32,60 @@
 
 #include "am335x_clock.h"
 #include "am335x_console.h"
-
+#include "kernel.h"
 #include "vfs.h"
+#include "cons.h"
 
+#define ARRAY_SIZE(x) ((int)(sizeof(x)/sizeof(x[0])))
 
-int _read(int file __attribute__((unused)), char *ptr, int len __attribute__((unused))) {
-	*ptr = am335x_console_getc();
-	return 1;
+static struct file {
+	struct file_ops* op;
+	int id;
+} f[1024];
+
+int _open (const char *name, int flags, int mode)
+{
+	int i=0;
+	while ((f[i].op!=0) && (i<ARRAY_SIZE(f))) i++;
+	if (i >= ARRAY_SIZE(f)) return -1;
+
+	const char* fname;
+	struct file_ops* fops = vfs_get_file_ops(name, &fname);
+	if (fops == 0) return -1;
+
+	int id = fops->open (fname, flags, mode);
+	if (id == -1) return -1;
+
+	f[i].id = id;
+	f[i].op = fops;
+
+  	return i;
 }
 
-int _write(int file __attribute__((unused)), char *ptr, int len) {
-	int todo;
-	for (todo = 0; todo < len; todo++) {
-		am335x_console_putc(*ptr++);
-	}
-	return len;
+int _read(int fd, char *ptr, int len) {
+	return f[fd].op->read (f[fd].id, ptr, len);
 }
 
-int _lseek(int file __attribute__((unused)), int ptr __attribute__((unused)), int dir __attribute__((unused))) {
-	return 0;
+int _write(int fd, char *ptr, int len) {
+	return f[fd].op->write (f[fd].id, ptr, len);
 }
 
-int _isatty(int file __attribute__((unused))) {
-	return 1;
+int _lseek(int fd, int offset, int whence) {
+	return f[fd].op->lseek(f[fd].id, offset, whence);
 }
 
-#include <sys/stat.h>
-int _fstat(int file __attribute__((unused)), struct stat *st) {
-	st->st_mode = S_IFCHR;
-	return 0;
+int _isatty(int fd) {
+	return f[fd].op->isatty(f[fd].id);
 }
 
-int _close(int file __attribute__((unused))) {
-	return -1;
+int _close(int fd) {
+	int res = f[fd].op->close(f[fd].id);
+	f[fd].op = 0;
+	return res;
+}
+
+int _fstat(int fd, struct stat *st) {
+	return f[fd].op->fstat(f[fd].id, st);
 }
 
 void* _sbrk(int incr) {
@@ -88,6 +108,7 @@ void* _sbrk(int incr) {
 
 void _exit(int i __attribute__((unused)))
 {
+    kernel_thread_exit();
     while(1);
 }
 
@@ -95,6 +116,10 @@ void _init()
 {
 	am335x_clock_enable_l3_l4wkup();
 	am335x_console_init();
+	struct file_ops* fops = cons_init();
+	f[0].op=fops; f[0].id=0;
+	f[1].op=fops; f[1].id=1;
+	f[2].op=fops; f[2].id=2;
 }
 
 void _fini()
@@ -103,12 +128,14 @@ void _fini()
 
 int _getpid ()
 {
-	return 1;
+	// return the running thread id
+	return kernel_thread_id();
 }
 
-int _kill (int pid __attribute__((unused)), int sig __attribute__((unused)))
+int _kill (int pid __attribute__((unused)), int sig __attribute__((unused))) 
 {
-	while(1);
+	kernel_thread_exit();
+	return 0;
 }
 
 

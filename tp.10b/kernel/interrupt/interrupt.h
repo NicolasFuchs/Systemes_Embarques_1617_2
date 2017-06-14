@@ -27,7 +27,6 @@
  * Date: 	04.03.2017
  */
 
-
 /**
  * ARM interrupt vectors enumeration
  */

@@ -18,7 +18,7 @@
  * Abstract: 	ARM Interrupt Handling - First-Level Interface
  *
  * Author: 	Daniel Gachet
- * Date: 	03.04.2017
+ * Date: 	22.05.2017
  */
 
 /*-- local symbols --------------------------------------------------------- */
@@ -94,13 +94,48 @@ vector_table_start:
 	b	fiq_handler
 
 undef_handler:		flih_1st_stage 0, INT_UNDEF
-svc_handler:		flih_1st_stage 0, INT_SWI
+//svc_handler:		flih_1st_stage 0, INT_SWI
 prefetch_handler:	flih_1st_stage 4, INT_PREFETCH
 data_handler:		flih_1st_stage 4, INT_DATA
 irq_handler:		flih_1st_stage 4, INT_IRQ
 fiq_handler:		flih_1st_stage 4, INT_FIQ
 
-flih:	.long 0		// first-level interrupt handler (2nd stage)
+	.global svc_handler
+svc_handler:
+	nop
+
+	// switch to user stack if coming from usr mode
+	mrs	r12, spsr
+	tst	r12, #0x0f
+	msreq	cpsr_c, #0xdf
+	moveq	r12, sp
+	msreq	cpsr_c, #0xd3
+	moveq	sp, r12
+
+	// save current context
+	stmfd	sp!,{r4,r5,lr}
+	mrs	r4, spsr
+	mov	r5, r12
+
+	// process syscall 
+	ldr	r12, syscall		
+
+	cmp	r12, #0
+	moveq	r0, #-1
+	blxne	r12
+
+	// restore process context
+	tst	r4, #0x0f
+	msreq	cpsr_c, #0xdf
+	moveq	sp, r5
+	msreq	cpsr_c, #0xd3
+
+	msr	spsr, r4
+	ldmfd	sp!, {r4,r5,pc}^
+
+flih:	 .long 0	// first-level interrupt handler (2nd stage)
+
+syscall: .long 0
 vector_table_end:
 
 
@@ -112,24 +147,24 @@ interrupt_init_1st_stage:
 	nop
 
 	// initialize all stack pointers
-	mrs	r1, cpsr		// save mode
+	mrs		r1, cpsr		// save mode
 	msr     cpsr_c, #0xd1		// switch to fiq mode
-	ldr	sp, =FIQ_STACK_TOP	
+	ldr		sp, =FIQ_STACK_TOP
 	msr     cpsr_c, #0xd2		// switch to irq mode
-	ldr	sp, =IRQ_STACK_TOP	
+	ldr		sp, =IRQ_STACK_TOP
 	msr     cpsr_c, #0xd7		// switch to abort mode
-	ldr	sp, =ABORT_STACK_TOP	
+	ldr		sp, =ABORT_STACK_TOP
 	msr     cpsr_c, #0xdb		// switch to undef mode
-	ldr	sp, =UNDEF_STACK_TOP
+	ldr		sp, =UNDEF_STACK_TOP
 	msr     cpsr_c, r1 		// restore mode
 
 	// cp15 set vector base address 
-	ldr	r1, =VECTOR_BASE_ADDR
-	mcr	p15, #0, r1, c12, c0, #0
+	ldr		r1, =VECTOR_BASE_ADDR
+	mcr		p15, #0, r1, c12, c0, #0
 	
 	// install interrupt handling routing into vector table
-	ldr	r1, =flih
-	str	r0, [r1]	
+	ldr		r1, =flih
+	str		r0, [r1]
 
 #ifdef FAST_HANDLER
 	// copy low level interrupt handling code into vector table
@@ -141,6 +176,19 @@ interrupt_init_1st_stage:
 	cmp	r0, r1
 	bne	1b
 #endif
+	bx	lr
+
+/* ------------------------------------------------------------------------- */
+
+	.global interrupt_attach_syscall_handler
+interrupt_attach_syscall_handler:
+	nop
+	ldr	r1, =syscall
+	ldr	r2, =vector_table_start - VECTOR_BASE_ADDR
+	sub	r1, r2
+
+	str	r0, [r1]
+
 	bx	lr
 
 /* ------------------------------------------------------------------------- */
